@@ -534,6 +534,9 @@ searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preven
 /* ─── Persistence (localStorage) ───────────────── */
 const STORAGE_KEY = 'reise-tracker-v1';
  
+// Must be declared before loadLocations uses it
+const expandedGroups = new Set();
+ 
 function saveLocations() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
@@ -557,9 +560,6 @@ function loadLocations() {
  
 /* ─── Add location ──────────────────────────────── */
 document.getElementById('addBtn').addEventListener('click', handleAdd);
- 
-// Which country groups are expanded (by country name)
-const expandedGroups = new Set();
  
 async function handleAdd() {
   const name = searchInput.value.trim(); if (!name) return;
