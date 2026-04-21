@@ -12,7 +12,7 @@
   --accent:#e63946;--accent-glow:rgba(230,57,70,.35);--text:#dde3f0;--muted:#5c6f8a;
 }
 body{background:var(--bg);color:var(--text);font-family:'Karla',sans-serif;min-height:100vh;overflow-x:hidden}
-
+ 
 header{text-align:center;padding:2.5rem 1rem .75rem;position:relative;z-index:10}
 header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
   width:600px;height:200px;pointer-events:none;
@@ -21,7 +21,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   background:linear-gradient(135deg,#fff 0%,#aabfe8 50%,var(--accent) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .subtitle{color:var(--muted);font-size:.9rem;letter-spacing:.08em;margin-top:.3rem}
-
+ 
 .search-wrapper{max-width:620px;margin:1.75rem auto 0;padding:0 1rem;position:relative;z-index:100}
 .search-row{display:flex;gap:.6rem}
 #searchInput{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);
@@ -42,7 +42,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   transition:background .15s;color:var(--text);line-height:1.4}
 .sug-item:last-child{border-bottom:none}
 .sug-item:hover{background:var(--border);color:#fff}
-
+ 
 /* MAP */
 #mapWrap{
   position:relative;
@@ -63,14 +63,14 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   cursor:grab;
 }
 #mapCanvas:active{cursor:grabbing}
-
+ 
 /* Pin overlay – separate canvas, always on top */
 #pinCanvas{
   position:absolute;
   inset:0;
   pointer-events:none;
 }
-
+ 
 /* HUD */
 #hud{
   position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);
@@ -80,7 +80,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.07em;white-space:nowrap;
 }
 #hudZ{color:#fff}
-
+ 
 /* +/- buttons */
 #zbWrap{position:absolute;right:.8rem;bottom:3rem;z-index:20;display:flex;flex-direction:column;gap:3px}
 .zb{width:32px;height:32px;display:flex;align-items:center;justify-content:center;
@@ -88,10 +88,10 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   font-size:1.2rem;font-weight:700;cursor:pointer;border-radius:8px;
   transition:border-color .15s,background .15s;line-height:1;user-select:none}
 .zb:hover{border-color:var(--accent);background:rgba(230,57,70,.15)}
-
+ 
 .attr{position:absolute;bottom:.35rem;right:.8rem;font-size:.6rem;
   color:rgba(255,255,255,.2);pointer-events:none;z-index:5}
-
+ 
 /* LOCATIONS */
 .locations-section{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
 .section-header{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.25rem;
@@ -100,18 +100,18 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
 #countBadge{background:var(--surface);border:1px solid var(--border);color:var(--muted);
   font-size:.75rem;font-weight:700;padding:.15rem .55rem;border-radius:20px}
 .empty-state{color:var(--muted);font-size:.9rem;text-align:center;padding:3rem 0}
-
+ 
 /* ── Country group ────────── */
 .country-group{margin-bottom:.65rem;border-radius:14px;overflow:hidden;
   border:1px solid var(--border);background:var(--surface)}
-
+ 
 .country-header{
   display:flex;align-items:center;gap:.65rem;padding:.85rem 1.1rem;
   cursor:pointer;user-select:none;
   transition:background .18s;
 }
 .country-header:hover{background:var(--elevated)}
-
+ 
 .country-flag{font-size:1.15rem;line-height:1;flex-shrink:0}
 .country-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.12em;
   color:#fff;flex:1}
@@ -120,26 +120,26 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   padding:.12rem .5rem;border-radius:20px;margin-right:.2rem}
 .country-chevron{color:var(--muted);font-size:.75rem;transition:transform .25s;flex-shrink:0}
 .country-group.open .country-chevron{transform:rotate(180deg)}
-
+ 
 /* ── Places inside country ─── */
 .country-places{max-height:0;overflow:hidden;transition:max-height .32s ease}
 .country-group.open .country-places{max-height:4000px}
-
+ 
 .place-item{
   border-top:1px solid var(--border);
   padding:.85rem 1.1rem .85rem 1.3rem;
   transition:background .18s;
 }
 .place-item:hover{background:rgba(255,255,255,.02)}
-
+ 
 .place-header{display:flex;align-items:center;gap:.55rem;margin-bottom:.6rem}
-
+ 
 .pin-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .pin-dot.city{background:#e63946;box-shadow:0 0 7px rgba(230,57,70,.6)}
 .pin-dot.place{background:#ffd000;box-shadow:0 0 7px rgba(255,208,0,.5)}
-
+ 
 .place-name{font-weight:700;font-size:.9rem;flex:1;color:#fff;line-height:1.3}
-
+ 
 .fly-btn{background:none;border:1px solid var(--border);color:var(--muted);font-size:.68rem;
   font-weight:700;letter-spacing:.07em;padding:.18rem .5rem;border-radius:6px;cursor:pointer;
   transition:border-color .2s,color .2s,background .2s;margin-right:.2rem;white-space:nowrap}
@@ -147,7 +147,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
 .remove-btn{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;
   line-height:1;padding:0 .1rem;transition:color .2s}
 .remove-btn:hover{color:var(--accent)}
-
+ 
 .note-label{font-size:.68rem;color:var(--muted);letter-spacing:.08em;
   text-transform:uppercase;margin-bottom:.3rem}
 .note-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);
@@ -155,7 +155,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   min-height:58px;outline:none;transition:border-color .2s,box-shadow .2s;line-height:1.5}
 .note-input::placeholder{color:var(--muted)}
 .note-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
-
+ 
 #modal{display:none;position:fixed;inset:0;background:rgba(4,8,18,.75);
   backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
 #modal.open{display:flex}
@@ -182,12 +182,12 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
 </style>
 </head>
 <body>
-
+ 
 <header>
   <h1>Reise Tracker</h1>
   <p class="subtitle">Deine bereisten Orte auf einem Blick</p>
 </header>
-
+ 
 <div class="search-wrapper">
   <div class="search-row">
     <input id="searchInput" type="text" placeholder="Ort oder Land suchen…" autocomplete="off" spellcheck="false"/>
@@ -195,7 +195,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   </div>
   <div id="suggestions"></div>
 </div>
-
+ 
 <div id="mapWrap">
   <canvas id="mapCanvas"></canvas>
   <canvas id="pinCanvas"></canvas>
@@ -203,7 +203,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   <div id="zbWrap"><button class="zb" id="zIn">+</button><button class="zb" id="zOut">−</button></div>
   <div class="attr">© CARTO · © OpenStreetMap</div>
 </div>
-
+ 
 <div class="locations-section">
   <div class="section-header">
     <h2>Meine Orte</h2>
@@ -211,7 +211,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   </div>
   <div id="locationsList"><p class="empty-state">Noch keine Orte hinzugefügt</p></div>
 </div>
-
+ 
 <div id="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div class="modal-header">
@@ -224,14 +224,14 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
   </div>
 </div>
 <div id="toast"></div>
-
+ 
 <script>
 'use strict';
-
+ 
 /* ─── State ─────────────────────────────────────── */
 const locations   = [];
 let   activeSuggest = null;
-
+ 
 /* ─── Canvas & HiDPI setup ──────────────────────── */
 const wrap      = document.getElementById('mapWrap');
 const mc        = document.getElementById('mapCanvas');   // tiles
@@ -239,7 +239,7 @@ const pc        = document.getElementById('pinCanvas');   // pins (no filter)
 const mCtx      = mc.getContext('2d');
 const pCtx      = pc.getContext('2d');
 const DPR       = Math.min(window.devicePixelRatio || 1, 2);
-
+ 
 function sizeCanvases() {
   const W = wrap.offsetWidth  || 800;
   const H = wrap.offsetHeight || 420;
@@ -252,13 +252,13 @@ function sizeCanvases() {
   pCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 sizeCanvases();
-
+ 
 /* ─── Map view ──────────────────────────────────── */
 let zoom = 2;
 let cx   = 2.0;    // center of world at zoom 2 (world = 4 tiles wide, center = 2.0)
 let cy   = 1.4;
 const TS = 256;
-
+ 
 /* Clamp so world shows exactly once, no repeating edges */
 function clampView() {
   const W  = wrap.offsetWidth  || 800;
@@ -271,25 +271,25 @@ function clampView() {
   if (n * TS <= H) { cy = n / 2; }
   else { cy = Math.max(H / 2 / TS, Math.min(n - H / 2 / TS, cy)); }
 }
-
+ 
 /* ─── Tile cache ────────────────────────────────── */
 const CACHE = {};
 const TILE_PROVIDERS = [
   (z,x,y) => `https://${'abcd'[Math.abs(x+y)%4]}.basemaps.cartocdn.com/dark_matter/${z}/${x}/${y}@2x.png`,
   (z,x,y) => `https://${'abc'[Math.abs(x+y)%3]}.tile.openstreetmap.org/${z}/${x}/${y}.png`,
 ];
-
+ 
 function getTile(z, tx, ty) {
   const n = 1 << z;
   // No wrapping – tiles outside world bounds return null (shown as dark background)
   if (tx < 0 || tx >= n || ty < 0 || ty >= n) return null;
-
+ 
   const key = `${z}/${tx}/${ty}`;
   if (CACHE[key] instanceof HTMLImageElement) return CACHE[key];
   if (CACHE[key]) return null;   // loading or failed
-
+ 
   CACHE[key] = 'loading';
-
+ 
   function tryProvider(idx) {
     if (idx >= TILE_PROVIDERS.length) { CACHE[key] = 'failed'; return; }
     const img = new Image();
@@ -302,19 +302,19 @@ function getTile(z, tx, ty) {
   tryProvider(0);
   return null;
 }
-
+ 
 /* ─── Main render ───────────────────────────────── */
 function render() {
   const W = wrap.offsetWidth  || 800;
   const H = wrap.offsetHeight || 420;
-
+ 
   mCtx.fillStyle = '#0a0e1a';
   mCtx.fillRect(0, 0, W, H);
-
+ 
   const n = 1 << zoom;
   const originX = W / 2 - cx * TS;
   const originY = H / 2 - cy * TS;
-
+ 
   // Dark fill for areas outside the world (before drawing tiles)
   mCtx.fillStyle = '#050810';
   // Left of world
@@ -327,12 +327,12 @@ function render() {
   // Bottom of world
   const worldBottom = originY + n * TS;
   if (worldBottom < H) mCtx.fillRect(0, worldBottom, W, H - worldBottom);
-
+ 
   const x0 = Math.floor(-originX / TS) - 1;
   const y0 = Math.floor(-originY / TS) - 1;
   const x1 = Math.ceil((W - originX) / TS) + 1;
   const y1 = Math.ceil((H - originY) / TS) + 1;
-
+ 
   for (let tx = x0; tx <= x1; tx++) {
     for (let ty = y0; ty <= y1; ty++) {
       // Skip tiles outside world bounds – they're already covered by dark fill
@@ -348,13 +348,13 @@ function render() {
       }
     }
   }
-
+ 
   // Pins on separate canvas (so they are unaffected by any future styling)
   renderPins(originX, originY, W, H);
-
+ 
   document.getElementById('hudZ').textContent = 'Zoom ' + zoom;
 }
-
+ 
 function renderPins(originX, originY, W, H) {
   pCtx.clearRect(0, 0, W, H);
   locations.forEach(loc => {
@@ -362,17 +362,17 @@ function renderPins(originX, originY, W, H) {
     const px = originX + p.x * TS;
     const py = originY + p.y * TS;
     if (px < -20 || py < -20 || px > W + 20 || py > H + 20) return;
-
+ 
     const pinColor  = loc.isCountry ? '#e63946' : '#ffd000';
     const glowColor = loc.isCountry ? 'rgba(230,57,70,.28)' : 'rgba(255,208,0,.22)';
     const rimColor  = loc.isCountry ? 'rgba(160,30,40,.9)' : 'rgba(120,75,0,.9)';
-
+ 
     // Outer glow
     pCtx.beginPath();
     pCtx.arc(px, py, 10, 0, Math.PI * 2);
     pCtx.fillStyle = glowColor;
     pCtx.fill();
-
+ 
     // Pin dot
     pCtx.beginPath();
     pCtx.arc(px, py, 5.5, 0, Math.PI * 2);
@@ -381,7 +381,7 @@ function renderPins(originX, originY, W, H) {
     pCtx.lineWidth   = 1.5;
     pCtx.fill();
     pCtx.stroke();
-
+ 
     // Label
     const label = loc.shortName || loc.name.split(',')[0];
     pCtx.font         = 'bold 12px Karla,sans-serif';
@@ -392,7 +392,7 @@ function renderPins(originX, originY, W, H) {
     pCtx.fillText   (label, px + 9, py + 4);
   });
 }
-
+ 
 /* ─── Projection helpers ────────────────────────── */
 function ll2t(lat, lon, z) {
   const n = 1 << z;
@@ -401,7 +401,7 @@ function ll2t(lat, lon, z) {
   const y = (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * n;
   return { x, y };
 }
-
+ 
 /* ─── Zoom ──────────────────────────────────────── */
 function setZoom(nz, pivotX, pivotY) {
   nz = Math.max(1, Math.min(18, nz));
@@ -419,7 +419,7 @@ function setZoom(nz, pivotX, pivotY) {
   clampView();
   render();
 }
-
+ 
 /* ─── Drag / scroll ─────────────────────────────── */
 let drag = null;
 mc.addEventListener('wheel', e => {
@@ -429,7 +429,7 @@ mc.addEventListener('wheel', e => {
     (e.clientX - r.left),
     (e.clientY - r.top));
 }, { passive: false });
-
+ 
 mc.addEventListener('mousedown', e => {
   drag = { sx: e.clientX, sy: e.clientY, cx, cy, moved: false };
   mc.style.cursor = 'grabbing';
@@ -444,7 +444,7 @@ window.addEventListener('mousemove', e => {
   render();
 });
 window.addEventListener('mouseup', () => { drag = null; mc.style.cursor = 'grab'; });
-
+ 
 mc.addEventListener('click', e => {
   if (drag?.moved) return;
   const r  = mc.getBoundingClientRect();
@@ -459,7 +459,7 @@ mc.addEventListener('click', e => {
     if (Math.hypot(mx - (ox + p.x * TS), my - (oy + p.y * TS)) < 14) { openModal(loc); return; }
   }
 });
-
+ 
 /* Touch */
 let t0 = null, pinch0 = null;
 mc.addEventListener('touchstart', e => {
@@ -479,23 +479,24 @@ mc.addEventListener('touchmove', e => {
   }
 }, { passive: false });
 mc.addEventListener('touchend', () => { t0 = null; pinch0 = null; });
-
+ 
 document.getElementById('zIn' ).addEventListener('click', () => setZoom(zoom + 1));
 document.getElementById('zOut').addEventListener('click', () => setZoom(zoom - 1));
-
+ 
 window.addEventListener('resize', () => { sizeCanvases(); render(); });
-
+ 
 function flyTo(lat, lon, z) {
   const p = ll2t(lat, lon, z);
   zoom = z; cx = p.x; cy = p.y;
   clampView();
   render();
 }
-
+ 
 /* ─── Initial render ────────────────────────────── */
 clampView();
 render();
-
+loadLocations();
+ 
 /* ─── Nominatim ─────────────────────────────────── */
 const searchInput = document.getElementById('searchInput');
 const suggDiv     = document.getElementById('suggestions');
@@ -529,19 +530,43 @@ function renderSugg(res) {
 function hideSugg() { suggDiv.style.display = 'none'; suggDiv.innerHTML = ''; }
 document.addEventListener('click', e => { if (!e.target.closest('.search-wrapper')) hideSugg(); });
 searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } });
-
+ 
+/* ─── Persistence (localStorage) ───────────────── */
+const STORAGE_KEY = 'reise-tracker-v1';
+ 
+function saveLocations() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
+  } catch(e) { console.warn('localStorage save failed:', e); }
+}
+ 
+function loadLocations() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (!Array.isArray(saved)) return;
+    saved.forEach(loc => {
+      locations.push(loc);
+      if (loc.country) expandedGroups.add(loc.country);
+    });
+    renderList();
+    render();
+  } catch(e) { console.warn('localStorage load failed:', e); }
+}
+ 
 /* ─── Add location ──────────────────────────────── */
 document.getElementById('addBtn').addEventListener('click', handleAdd);
-
+ 
 // Which country groups are expanded (by country name)
 const expandedGroups = new Set();
-
+ 
 async function handleAdd() {
   const name = searchInput.value.trim(); if (!name) return;
   const btn = document.getElementById('addBtn'); btn.disabled = true;
-
+ 
   let raw = (activeSuggest?.name === name) ? activeSuggest : null;
-
+ 
   if (!raw) {
     try {
       // addressdetails=1 gives us country, city, etc.
@@ -559,12 +584,12 @@ async function handleAdd() {
                     raw.display_name.split(',')[0].trim();
   const isCity    = raw.class === 'place' &&
                     ['city','town','village','hamlet','municipality'].includes(raw.type);
-
+ 
   // Red pin = only when the entry is a whole country
   const isCountry = raw.type === 'country' ||
                     raw.addresstype === 'country' ||
                     (raw.class === 'boundary' && parseInt(raw.address_rank) <= 4);
-
+ 
   const loc = {
     name:      raw.display_name,
     shortName: shortName,
@@ -575,35 +600,36 @@ async function handleAdd() {
     isCountry: isCountry,
     note:      '',
   };
-
+ 
   if (locations.some(l => l.name === loc.name)) { showToast('Bereits in der Liste.'); btn.disabled = false; return; }
-
+ 
   locations.push(loc);
-
+  saveLocations();
+ 
   // Auto-expand the country group this place belongs to
   if (loc.country) expandedGroups.add(loc.country);
-
+ 
   render();
   renderList();
   flyTo(loc.lat, loc.lon, isCity ? Math.max(zoom, 7) : Math.max(zoom, 10));
   searchInput.value = ''; activeSuggest = null; hideSugg(); btn.disabled = false;
   showToast(`📍 ${shortName} hinzugefügt`);
 }
-
+ 
 /* ─── Grouped list ──────────────────────────────── */
 function renderList() {
   const list = document.getElementById('locationsList');
   document.getElementById('countBadge').textContent = locations.length;
-
+ 
   if (!locations.length) {
     list.innerHTML = '<p class="empty-state">Noch keine Orte hinzugefügt</p>';
     return;
   }
-
+ 
   // Group by country; ungrouped = no country info
   const groups  = {};   // countryName → [loc, ...]
   const ungrouped = []; // locs without country
-
+ 
   locations.forEach(loc => {
     if (loc.country) {
       (groups[loc.country] = groups[loc.country] || []).push(loc);
@@ -611,17 +637,17 @@ function renderList() {
       ungrouped.push(loc);
     }
   });
-
+ 
   list.innerHTML = '';
-
+ 
   // ── Render each country group ──
   Object.entries(groups).forEach(([country, locs]) => {
     const isOpen = expandedGroups.has(country);
     const group  = document.createElement('div');
     group.className = 'country-group' + (isOpen ? ' open' : '');
-
+ 
     const flag = countryFlag(locs[0]);
-
+ 
     group.innerHTML = `
       <div class="country-header">
         <span class="country-flag">${flag}</span>
@@ -630,26 +656,26 @@ function renderList() {
         <span class="country-chevron">▼</span>
       </div>
       <div class="country-places"></div>`;
-
+ 
     const header = group.querySelector('.country-header');
     const places = group.querySelector('.country-places');
-
+ 
     // Render place items inside
     locs.forEach(loc => {
       const idx  = locations.indexOf(loc);
       const item = buildPlaceItem(loc, idx);
       places.appendChild(item);
     });
-
+ 
     header.addEventListener('click', () => {
       const open = group.classList.toggle('open');
       if (open) expandedGroups.add(country);
       else       expandedGroups.delete(country);
     });
-
+ 
     list.appendChild(group);
   });
-
+ 
   // ── Render ungrouped locations ──
   if (ungrouped.length) {
     ungrouped.forEach(loc => {
@@ -663,7 +689,7 @@ function renderList() {
     });
   }
 }
-
+ 
 /* Build a single place row with note textarea */
 function buildPlaceItem(loc, idx) {
   const item = document.createElement('div');
@@ -677,9 +703,10 @@ function buildPlaceItem(loc, idx) {
     </div>
     <div class="note-label">Notiz</div>
     <textarea class="note-input" data-i="${idx}" placeholder="Erinnerungen, Tipps, Highlights…">${esc(loc.note)}</textarea>`;
-
+ 
   item.querySelector('.note-input').addEventListener('input', e => {
     locations[+e.target.dataset.i].note = e.target.value;
+    saveLocations();
   });
   item.querySelector('.fly-btn').addEventListener('click', e => {
     e.stopPropagation();
@@ -690,18 +717,18 @@ function buildPlaceItem(loc, idx) {
   item.querySelector('.remove-btn').addEventListener('click', e => {
     e.stopPropagation();
     const i = +e.target.dataset.i;
-    // Remove from expandedGroups if last item in that country
     const country = locations[i].country;
     if (country && locations.filter(l => l.country === country).length === 1) {
       expandedGroups.delete(country);
     }
     locations.splice(i, 1);
+    saveLocations();
     render();
     renderList();
   });
   return item;
 }
-
+ 
 /* Derive flag emoji from country code */
 function countryFlag(loc) {
   try {
@@ -711,7 +738,7 @@ function countryFlag(loc) {
     return '🌍';
   } catch { return '🌍'; }
 }
-
+ 
 /* ─── Modal ─────────────────────────────────────── */
 const modal = document.getElementById('modal');
 function openModal(loc) {
@@ -724,7 +751,7 @@ function openModal(loc) {
 document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
-
+ 
 /* ─── Toast ─────────────────────────────────────── */
 let toastTimer = null;
 function showToast(msg) {
@@ -735,3 +762,4 @@ function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 </script>
 </body>
 </html>
+ 
