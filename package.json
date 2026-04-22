@@ -1,0 +1,21 @@
+{
+  "name": "reise-tracker",
+  "version": "1.0.0",
+  "description": "Reise Tracker - Travel location tracker",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static HTML - no build needed'",
+    "start": "npx serve ."
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "travel",
+    "tracker",
+    "map"
+  ],
+  "author": "",
+  "license": "MIT"
+}
