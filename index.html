@@ -495,7 +495,6 @@ function flyTo(lat, lon, z) {
 /* ─── Initial render ────────────────────────────── */
 clampView();
 render();
-loadLocations();
  
 /* ─── Nominatim ─────────────────────────────────── */
 const searchInput = document.getElementById('searchInput');
@@ -539,7 +538,11 @@ const expandedGroups = new Set();
  
 function saveLocations() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
+    const data = JSON.stringify(locations);
+    localStorage.setItem(STORAGE_KEY, data);
+    // Verify the save actually worked
+    const check = localStorage.getItem(STORAGE_KEY);
+    if (check !== data) console.warn('localStorage verify failed');
   } catch(e) { console.warn('localStorage save failed:', e); }
 }
  
@@ -548,7 +551,9 @@ function loadLocations() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const saved = JSON.parse(raw);
-    if (!Array.isArray(saved)) return;
+    if (!Array.isArray(saved) || !saved.length) return;
+    // Clear first to avoid duplicates on double-call
+    locations.length = 0;
     saved.forEach(loc => {
       locations.push(loc);
       if (loc.country) expandedGroups.add(loc.country);
@@ -604,10 +609,8 @@ async function handleAdd() {
   if (locations.some(l => l.name === loc.name)) { showToast('Bereits in der Liste.'); btn.disabled = false; return; }
  
   locations.push(loc);
-  saveLocations();
- 
-  // Auto-expand the country group this place belongs to
   if (loc.country) expandedGroups.add(loc.country);
+  saveLocations();  // save AFTER expandedGroups is updated
  
   render();
   renderList();
@@ -759,7 +762,15 @@ function showToast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+ 
+/* ─── Boot: load saved data after page fully ready ── */
+// Use window load event so canvas is sized before we render pins
+window.addEventListener('load', () => {
+  sizeCanvases();
+  clampView();
+  render();
+  loadLocations();
+});
 </script>
 </body>
 </html>
- 
