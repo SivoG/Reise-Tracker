@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Reise Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -14,7 +14,8 @@
   --bg:#070c15;--surface:#0d1525;--elevated:#111e33;--border:#1c2d47;
   --accent:#e63946;--glow:rgba(230,57,70,.32);--text:#dde3f0;--muted:#5a6e8a;
 }
-body{background:var(--bg);color:var(--text);font-family:'Karla',sans-serif;min-height:100vh;overflow-x:hidden}
+html{overflow-x:hidden;width:100%}
+body{background:var(--bg);color:var(--text);font-family:'Karla',sans-serif;min-height:100vh;overflow-x:hidden;width:100%;position:relative}
 
 /* ── Header ──────────────────────────────────────── */
 header{
@@ -22,7 +23,7 @@ header{
 }
 header::before{
   content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:560px;height:160px;pointer-events:none;
+  width:min(560px, 100vw);height:160px;pointer-events:none;
   background:radial-gradient(ellipse at top,rgba(60,110,220,.13) 0%,transparent 70%);
 }
 h1{
