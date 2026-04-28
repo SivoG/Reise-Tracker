@@ -5,228 +5,289 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reise Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>
-  window.va = window.va || function () { 
-    (window.vaq = window.vaq || []).push(arguments); 
-  };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <style>
+/* ── Reset & Variables ───────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#070c15;--surface:#0d1525;--elevated:#131f35;--border:#1d2d4a;
-  --accent:#e63946;--accent-glow:rgba(230,57,70,.35);--text:#dde3f0;--muted:#5c6f8a;
+  --bg:#070c15;--surface:#0d1525;--elevated:#111e33;--border:#1c2d47;
+  --accent:#e63946;--glow:rgba(230,57,70,.32);--text:#dde3f0;--muted:#5a6e8a;
 }
 body{background:var(--bg);color:var(--text);font-family:'Karla',sans-serif;min-height:100vh;overflow-x:hidden}
  
-header{text-align:center;padding:2.5rem 1rem .75rem;position:relative;z-index:10}
-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:600px;height:200px;pointer-events:none;
-  background:radial-gradient(ellipse at top,rgba(68,120,230,.12) 0%,transparent 70%)}
-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-spacing:.25em;
-  background:linear-gradient(135deg,#fff 0%,#aabfe8 50%,var(--accent) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.subtitle{color:var(--muted);font-size:.9rem;letter-spacing:.08em;margin-top:.3rem}
+/* ── Header ──────────────────────────────────────── */
+header{
+  text-align:center;padding:2rem 1rem .6rem;position:relative;z-index:10;
+}
+header::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:560px;height:160px;pointer-events:none;
+  background:radial-gradient(ellipse at top,rgba(60,110,220,.13) 0%,transparent 70%);
+}
+h1{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6vw,3.7rem);
+  letter-spacing:.25em;
+  background:linear-gradient(135deg,#e8edf8 0%,#9ab4e0 50%,var(--accent) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.subtitle{color:var(--muted);font-size:.86rem;letter-spacing:.08em;margin-top:.2rem}
+#langBtn{
+  position:absolute;top:1rem;right:1rem;background:rgba(13,21,37,.9);
+  border:1px solid var(--border);color:var(--muted);font-size:.68rem;font-weight:700;
+  letter-spacing:.1em;padding:.24rem .68rem;border-radius:20px;cursor:pointer;
+  transition:border-color .2s,color .2s;z-index:20;
+}
+#langBtn:hover{border-color:var(--accent);color:var(--text)}
  
-.search-wrapper{max-width:620px;margin:1.75rem auto 0;padding:0 1rem;position:relative;z-index:100}
-.search-row{display:flex;gap:.6rem}
-#searchInput{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);
-  padding:.75rem 1.2rem;border-radius:10px;font-family:inherit;font-size:.95rem;outline:none;
-  transition:border-color .2s,box-shadow .2s}
+/* ── Search ──────────────────────────────────────── */
+.search-wrap{max-width:620px;margin:1.4rem auto 0;padding:0 1rem;position:relative;z-index:100}
+.search-row{display:flex;gap:.55rem}
+#searchInput{
+  flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);
+  padding:.7rem 1.1rem;border-radius:10px;font-family:inherit;font-size:.92rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
 #searchInput::placeholder{color:var(--muted)}
-#searchInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
-#addBtn{background:var(--accent);color:#fff;border:none;padding:.75rem 1.4rem;border-radius:10px;
-  font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap;
-  letter-spacing:.03em;transition:filter .2s,transform .1s,box-shadow .2s}
-#addBtn:hover{filter:brightness(1.15);box-shadow:0 4px 18px var(--accent-glow);transform:translateY(-1px)}
-#addBtn:active{transform:translateY(0);filter:brightness(.95)}
+#searchInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+#addBtn{
+  background:var(--accent);color:#fff;border:none;padding:.7rem 1.3rem;border-radius:10px;
+  font-family:inherit;font-size:.87rem;font-weight:700;cursor:pointer;white-space:nowrap;
+  letter-spacing:.03em;transition:filter .2s,transform .1s,box-shadow .2s;
+}
+#addBtn:hover{filter:brightness(1.14);box-shadow:0 4px 16px var(--glow);transform:translateY(-1px)}
+#addBtn:active{transform:translateY(0);filter:brightness(.93)}
 #addBtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-#suggestions{position:absolute;top:calc(100% + 4px);left:1rem;right:calc(1rem + 142px);
+#suggestions{
+  position:absolute;top:calc(100% + 3px);left:1rem;right:calc(1rem + 140px);
   background:var(--elevated);border:1px solid var(--border);border-radius:0 0 10px 10px;
-  z-index:200;overflow:hidden;display:none;box-shadow:0 12px 30px rgba(0,0,0,.5)}
-.sug-item{padding:.65rem 1.2rem;font-size:.875rem;cursor:pointer;border-bottom:1px solid var(--border);
-  transition:background .15s;color:var(--text);line-height:1.4}
+  z-index:200;overflow:hidden;display:none;box-shadow:0 12px 28px rgba(0,0,0,.55);
+}
+.sug-item{
+  padding:.6rem 1.1rem;font-size:.84rem;cursor:pointer;border-bottom:1px solid var(--border);
+  color:var(--text);line-height:1.4;transition:background .15s;
+}
 .sug-item:last-child{border-bottom:none}
 .sug-item:hover{background:var(--border);color:#fff}
  
-/* MAP */
-#mapWrap{
-  position:relative;
-  width:100%;
-  height:60vh;
-  min-height:320px;
-  max-height:580px;
-  margin-top:.75rem;
-  background:#0a0e1a;
-  overflow:hidden;
+/* ── Globe wrapper ───────────────────────────────── */
+#globeWrap{
+  width:100%;height:62vh;max-height:570px;min-height:280px;
+  position:relative;margin-top:.55rem;overflow:hidden;background:var(--bg);
 }
-/* NO CSS filter on this canvas – tiles are already dark */
-#mapCanvas{
-  position:absolute;
-  inset:0;
-  display:block;
-  /* size via JS for HiDPI */
+#globeCanvas{
+  position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;display:block;
   cursor:grab;
 }
-#mapCanvas:active{cursor:grabbing}
+#globeCanvas:active{cursor:grabbing}
  
-/* Pin overlay – separate canvas, always on top */
-#pinCanvas{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
+/* Rotation button */
+#rotBtn{
+  position:absolute;top:.65rem;right:.75rem;z-index:20;
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(11,18,33,.9);border:1px solid var(--border);color:var(--muted);
+  font-size:1rem;cursor:pointer;transition:border-color .2s,color .2s,background .2s;
+  user-select:none;line-height:1;
 }
+#rotBtn:hover{border-color:var(--accent);color:var(--text)}
+#rotBtn.on{border-color:rgba(70,140,230,.65);color:#7ab6ff;background:rgba(70,140,230,.12)}
  
-/* HUD */
+/* HUD bar */
 #hud{
-  position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:.6rem;pointer-events:none;z-index:20;
-  background:rgba(7,12,21,.85);border:1px solid var(--border);
-  padding:.3rem 1rem;border-radius:20px;backdrop-filter:blur(6px);
-  font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.07em;white-space:nowrap;
+  position:absolute;bottom:.65rem;left:50%;transform:translateX(-50%);
+  pointer-events:none;z-index:20;
+  background:rgba(7,12,21,.9);border:1px solid var(--border);
+  padding:.28rem .95rem;border-radius:20px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  font-size:.67rem;font-weight:700;letter-spacing:.07em;
+  display:flex;align-items:center;gap:.45rem;white-space:nowrap;
 }
-#hudZ{color:#fff}
+#hudTxt{color:var(--text)}
+#hudZ{color:var(--muted);font-size:.6rem}
  
-/* +/- buttons */
-#zbWrap{position:absolute;right:.8rem;bottom:3rem;z-index:20;display:flex;flex-direction:column;gap:3px}
-.zb{width:32px;height:32px;display:flex;align-items:center;justify-content:center;
-  background:rgba(13,21,37,.92);border:1px solid var(--border);color:var(--text);
-  font-size:1.2rem;font-weight:700;cursor:pointer;border-radius:8px;
-  transition:border-color .15s,background .15s;line-height:1;user-select:none}
-.zb:hover{border-color:var(--accent);background:rgba(230,57,70,.15)}
  
-.attr{position:absolute;bottom:.35rem;right:.8rem;font-size:.6rem;
-  color:rgba(255,255,255,.2);pointer-events:none;z-index:5}
+/* ── Pin legend strip ──────────────────────────────────────────── */
+#pinLegend{max-width:680px;margin:.6rem auto 0;padding:0 1rem;display:flex;flex-wrap:wrap;gap:.4rem .6rem;min-height:0}
+.leg-item{display:flex;align-items:center;gap:.3rem;background:var(--surface);border:1px solid var(--border);padding:.18rem .5rem .18rem .35rem;border-radius:20px;font-size:.71rem;font-weight:700;color:var(--text);letter-spacing:.04em}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cp-wrap{position:relative;display:inline-flex;align-items:center}
+.cp-swatch{width:13px;height:13px;border-radius:50%;cursor:pointer;flex-shrink:0;border:2px solid rgba(255,255,255,.25);transition:transform .15s,border-color .15s;outline:none}
+.cp-swatch:hover{transform:scale(1.3);border-color:rgba(255,255,255,.6)}
+.cp-popup{position:absolute;bottom:calc(100% + 7px);left:-4px;z-index:500;background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:.6rem .65rem .5rem;box-shadow:0 8px 26px rgba(0,0,0,.65);display:none;min-width:195px}
+.cp-popup.open{display:block;animation:fadeUp .15s ease}
+.cp-colors{display:flex;flex-wrap:wrap;gap:.32rem;margin-bottom:.45rem}
+.cp-col{width:19px;height:19px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s,border-color .12s}
+.cp-col:hover{transform:scale(1.2)}
+.cp-col.sel{border-color:#fff;transform:scale(1.1)}
+.cp-row{display:flex;gap:.32rem;align-items:center}
+.cp-inp{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.26rem .48rem;border-radius:6px;font-family:inherit;font-size:.74rem;outline:none;transition:border-color .2s}
+.cp-inp:focus{border-color:var(--accent)}
+.cp-inp::placeholder{color:var(--muted)}
+.cp-ok{background:var(--accent);color:#fff;border:none;padding:.26rem .55rem;border-radius:6px;font-family:inherit;font-size:.71rem;font-weight:700;cursor:pointer}
+.cp-ok:hover{filter:brightness(1.15)}
+/* ── Locations list ──────────────────────────────── */
  
-/* LOCATIONS */
-.locations-section{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
-.section-header{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.25rem;
-  padding-bottom:.6rem;border-bottom:1px solid var(--border)}
-.section-header h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.18em;color:var(--muted)}
-#countBadge{background:var(--surface);border:1px solid var(--border);color:var(--muted);
-  font-size:.75rem;font-weight:700;padding:.15rem .55rem;border-radius:20px}
-.empty-state{color:var(--muted);font-size:.9rem;text-align:center;padding:3rem 0}
+/* ── Map style switch ───────────────────────────────────────────── */
+.map-switch-wrap{max-width:680px;margin:.5rem auto 0;padding:0 1rem}
+#mapBtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:.75rem;font-weight:700;letter-spacing:.05em;padding:.28rem .8rem;border-radius:20px;cursor:pointer;transition:border-color .2s,color .2s;display:inline-flex;gap:.3rem;align-items:center}
+#mapBtn:hover{border-color:var(--accent);color:var(--text)}
+#mapBtn[data-style="map"] .msw-sat{opacity:.38}
+#mapBtn[data-style="satellite"] .msw-map{opacity:.38}
+.msw-div{color:var(--border)}
  
-/* ── Country group ────────── */
-.country-group{margin-bottom:.65rem;border-radius:14px;overflow:hidden;
-  border:1px solid var(--border);background:var(--surface)}
- 
-.country-header{
-  display:flex;align-items:center;gap:.65rem;padding:.85rem 1.1rem;
-  cursor:pointer;user-select:none;
-  transition:background .18s;
+/* ── Color picker: fixed position so it escapes overflow:hidden ─── */
+.cp-popup{position:fixed !important;z-index:600 !important;bottom:auto !important;top:auto !important}
+.list-section{max-width:680px;margin:0 auto;padding:1.4rem 1rem 4rem}
+.list-header{
+  display:flex;align-items:baseline;gap:.7rem;margin-bottom:1.1rem;
+  padding-bottom:.5rem;border-bottom:1px solid var(--border);
 }
-.country-header:hover{background:var(--elevated)}
- 
-.country-flag{font-size:1.15rem;line-height:1;flex-shrink:0}
-.country-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.12em;
-  color:#fff;flex:1}
-.country-count{font-size:.68rem;font-weight:700;letter-spacing:.06em;
-  background:rgba(255,255,255,.07);color:var(--muted);
-  padding:.12rem .5rem;border-radius:20px;margin-right:.2rem}
-.country-chevron{color:var(--muted);font-size:.75rem;transition:transform .25s;flex-shrink:0}
-.country-group.open .country-chevron{transform:rotate(180deg)}
- 
-/* ── Places inside country ─── */
-.country-places{max-height:0;overflow:hidden;transition:max-height .32s ease}
-.country-group.open .country-places{max-height:4000px}
- 
-.place-item{
-  border-top:1px solid var(--border);
-  padding:.85rem 1.1rem .85rem 1.3rem;
-  transition:background .18s;
+.list-header h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.18em;color:var(--muted)}
+#countBadge{
+  background:var(--surface);border:1px solid var(--border);color:var(--muted);
+  font-size:.7rem;font-weight:700;padding:.12rem .5rem;border-radius:20px;
 }
-.place-item:hover{background:rgba(255,255,255,.02)}
+.empty-state{color:var(--muted);font-size:.88rem;text-align:center;padding:2.8rem 0}
  
-.place-header{display:flex;align-items:center;gap:.55rem;margin-bottom:.6rem}
+/* Country groups */
+.cg{
+  margin-bottom:.55rem;border-radius:13px;overflow:hidden;
+  border:1px solid var(--border);background:var(--surface);
+}
+.cg-head{
+  display:flex;align-items:center;gap:.55rem;padding:.78rem 1rem;
+  cursor:pointer;user-select:none;transition:background .18s;
+}
+.cg-head:hover{background:var(--elevated)}
+.cg-flag{font-size:1.05rem;flex-shrink:0}
+.cg-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.12em;color:#fff;flex:1}
+.cg-cnt{
+  font-size:.64rem;font-weight:700;background:rgba(255,255,255,.07);
+  color:var(--muted);padding:.1rem .45rem;border-radius:20px;margin-right:.15rem;
+}
+.cg-chev{color:var(--muted);font-size:.7rem;transition:transform .25s;flex-shrink:0}
+.cg.open .cg-chev{transform:rotate(180deg)}
+.cg-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.cg.open .cg-body{max-height:5000px}
  
-.pin-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.pin-dot.city{background:#e63946;box-shadow:0 0 7px rgba(230,57,70,.6)}
-.pin-dot.place{background:#ffd000;box-shadow:0 0 7px rgba(255,208,0,.5)}
- 
-.place-name{font-weight:700;font-size:.9rem;flex:1;color:#fff;line-height:1.3}
- 
-.fly-btn{background:none;border:1px solid var(--border);color:var(--muted);font-size:.68rem;
-  font-weight:700;letter-spacing:.07em;padding:.18rem .5rem;border-radius:6px;cursor:pointer;
-  transition:border-color .2s,color .2s,background .2s;margin-right:.2rem;white-space:nowrap}
+/* Place items */
+.pi{border-top:1px solid var(--border);padding:.78rem 1rem .78rem 1.15rem;transition:background .15s}
+.pi:hover{background:rgba(255,255,255,.018)}
+.pi-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dot.red{background:#e63946;box-shadow:0 0 6px rgba(230,57,70,.55)}
+.dot.yel{background:#ffd000;box-shadow:0 0 6px rgba(255,208,0,.45)}
+.pi-name{font-weight:700;font-size:.87rem;flex:1;color:#fff;line-height:1.3}
+.fly-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  font-size:.63rem;font-weight:700;letter-spacing:.07em;padding:.15rem .44rem;
+  border-radius:6px;cursor:pointer;transition:border-color .2s,color .2s,background .2s;
+  margin-right:.15rem;white-space:nowrap;
+}
 .fly-btn:hover{border-color:#ffd000;color:#ffd000;background:rgba(255,208,0,.06)}
-.remove-btn{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;
-  line-height:1;padding:0 .1rem;transition:color .2s}
-.remove-btn:hover{color:var(--accent)}
+.del-btn{
+  background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;
+  line-height:1;padding:0 .08rem;transition:color .2s;
+}
+.del-btn:hover{color:var(--accent)}
+.note-lbl{font-size:.66rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.28rem}
+.note-inp{
+  width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:.48rem .75rem;border-radius:8px;font-family:inherit;font-size:.83rem;
+  resize:vertical;min-height:54px;outline:none;line-height:1.5;
+  transition:border-color .2s,box-shadow .2s;
+}
+.note-inp::placeholder{color:var(--muted)}
+.note-inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--glow)}
  
-.note-label{font-size:.68rem;color:var(--muted);letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:.3rem}
-.note-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);
-  padding:.5rem .8rem;border-radius:8px;font-family:inherit;font-size:.85rem;resize:vertical;
-  min-height:58px;outline:none;transition:border-color .2s,box-shadow .2s;line-height:1.5}
-.note-input::placeholder{color:var(--muted)}
-.note-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
- 
-#modal{display:none;position:fixed;inset:0;background:rgba(4,8,18,.75);
-  backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+/* ── Modal ───────────────────────────────────────── */
+#modal{
+  display:none;position:fixed;top:0;right:0;bottom:0;left:0;
+  background:rgba(4,8,18,.78);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  z-index:1000;align-items:center;justify-content:center;
+}
 #modal.open{display:flex}
-.modal-box{background:var(--elevated);border:1px solid rgba(230,57,70,.5);border-radius:14px;
-  padding:1.6rem 1.8rem;min-width:280px;max-width:min(480px,90vw);
-  box-shadow:0 0 60px var(--accent-glow),0 20px 50px rgba(0,0,0,.6);animation:fadeUp .2s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.modal-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1rem}
-.modal-pin{width:12px;height:12px;background:#ffd000;border-radius:50%;flex-shrink:0;
-  margin-top:4px;box-shadow:0 0 10px rgba(255,208,0,.5)}
-.modal-title-text{font-weight:700;font-size:1rem;color:#fff;flex:1;line-height:1.4}
-.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.4rem;
-  line-height:1;flex-shrink:0;transition:color .2s;padding:0}
+.modal-box{
+  background:var(--elevated);border:1px solid rgba(230,57,70,.45);border-radius:14px;
+  padding:1.45rem 1.65rem;min-width:270px;max-width:min(470px,90vw);
+  box-shadow:0 0 55px var(--glow),0 18px 45px rgba(0,0,0,.6);animation:fadeUp .2s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.modal-hd{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.85rem}
+.modal-dot{
+  width:10px;height:10px;background:#ffd000;border-radius:50%;flex-shrink:0;
+  margin-top:4px;box-shadow:0 0 9px rgba(255,208,0,.5);
+}
+.modal-title{font-weight:700;font-size:.95rem;color:#fff;flex:1;line-height:1.4}
+.modal-close{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:1.3rem;line-height:1;flex-shrink:0;padding:0;transition:color .2s;
+}
 .modal-close:hover{color:#fff}
-.modal-note-label{font-size:.72rem;color:var(--muted);letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:.4rem}
-.modal-note-text{color:var(--text);font-size:.9rem;line-height:1.6;white-space:pre-wrap;min-height:40px}
-.modal-note-text.empty{color:var(--muted);font-style:italic}
-#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);
+.modal-note-lbl{font-size:.68rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem}
+.modal-note{color:var(--text);font-size:.87rem;line-height:1.6;white-space:pre-wrap;min-height:36px}
+.modal-note.empty{color:var(--muted);font-style:italic}
+ 
+/* ── Toast ───────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(18px);
   background:var(--elevated);border:1px solid var(--border);color:var(--text);
-  padding:.65rem 1.4rem;border-radius:50px;font-size:.875rem;opacity:0;pointer-events:none;
-  transition:all .3s ease;z-index:2000;white-space:nowrap}
+  padding:.6rem 1.3rem;border-radius:50px;font-size:.84rem;
+  opacity:0;pointer-events:none;transition:all .3s ease;z-index:2000;white-space:nowrap;
+}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
  
 <header>
-  <h1>Reise Tracker</h1>
-  <p class="subtitle">Deine bereisten Orte auf einem Blick</p>
+  <div id="langBtn" onclick="toggleLang()">EN</div>
+  <h1 data-i18n="title">Reise Tracker</h1>
+  <p class="subtitle" data-i18n="subtitle">Deine bereisten Orte auf einem Blick</p>
 </header>
  
-<div class="search-wrapper">
+<div class="search-wrap">
   <div class="search-row">
-    <input id="searchInput" type="text" placeholder="Ort oder Land suchen…" autocomplete="off" spellcheck="false"/>
-    <button id="addBtn">Ort hinzufügen</button>
+    <input id="searchInput" type="text" data-i18n-ph="searchPh"
+      placeholder="Ort oder Land suchen…" autocomplete="off" spellcheck="false"/>
+    <button id="addBtn" data-i18n="addBtn">Ort hinzufügen</button>
   </div>
   <div id="suggestions"></div>
 </div>
  
-<div id="mapWrap">
-  <canvas id="mapCanvas"></canvas>
-  <canvas id="pinCanvas"></canvas>
-  <div id="hud"><span id="hudZ">2</span>&nbsp;·&nbsp;Scrollen = Zoom &nbsp;|&nbsp; Ziehen = Bewegen</div>
-  <div id="zbWrap"><button class="zb" id="zIn">+</button><button class="zb" id="zOut">−</button></div>
-  <div class="attr">© CARTO · © OpenStreetMap</div>
+<div id="globeWrap">
+  <canvas id="globeCanvas" width="800" height="500"></canvas>
+  <button id="rotBtn" class="on" title="Auto-Rotation">⟳</button>
+  <div id="hud">
+    <span id="hudTxt">Ziehen = Drehen · Scroll = Zoom</span>
+    <span id="hudZ"></span>
+  </div>
 </div>
  
-<div class="locations-section">
-  <div class="section-header">
-    <h2>Meine Orte</h2>
+<div id="pinLegend"></div>
+ 
+<div class="map-switch-wrap">
+  <button id="mapBtn" data-style="map" onclick="switchMapStyle(this.dataset.style==='map'?'satellite':'map')">
+    <span class="msw-map">🗺 Karte</span><span class="msw-div"> · </span><span class="msw-sat">🛰 Satellit</span>
+  </button>
+</div>
+ 
+<div class="list-section">
+  <div class="list-header">
+    <h2 data-i18n="myPlaces">Meine Orte</h2>
     <span id="countBadge">0</span>
   </div>
-  <div id="locationsList"><p class="empty-state">Noch keine Orte hinzugefügt</p></div>
+  <div id="locationsList"></div>
 </div>
  
 <div id="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-pin"></div>
-      <span class="modal-title-text" id="modalTitle"></span>
+    <div class="modal-hd">
+      <div class="modal-dot"></div>
+      <span class="modal-title" id="modalTitle"></span>
       <button class="modal-close" id="modalClose">×</button>
     </div>
-    <div class="modal-note-label">Notiz</div>
-    <div class="modal-note-text" id="modalNote"></div>
+    <div class="modal-note-lbl" data-i18n="note">Notiz</div>
+    <div class="modal-note" id="modalNote"></div>
   </div>
 </div>
 <div id="toast"></div>
@@ -234,411 +295,983 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-s
 <script>
 'use strict';
  
-/* ─── State ─────────────────────────────────────── */
-const locations   = [];
+/* ══════════════════════════════════════════════════
+   1. APP STATE
+   ══════════════════════════════════════════════════ */
+const locations    = [];
 let   activeSuggest = null;
  
-/* ─── Canvas & HiDPI setup ──────────────────────── */
-const wrap      = document.getElementById('mapWrap');
-const mc        = document.getElementById('mapCanvas');   // tiles
-const pc        = document.getElementById('pinCanvas');   // pins (no filter)
-const mCtx      = mc.getContext('2d');
-const pCtx      = pc.getContext('2d');
-const DPR       = Math.min(window.devicePixelRatio || 1, 2);
+/* ══════════════════════════════════════════════════
+   2. THREE.JS CORE SETUP
+   ══════════════════════════════════════════════════ */
+const wrap   = document.getElementById('globeWrap');
+const canvas = document.getElementById('globeCanvas');
  
-function sizeCanvases() {
-  const W = wrap.offsetWidth  || 800;
-  const H = wrap.offsetHeight || 420;
-  // Physical pixels = CSS pixels × DPR for crisp rendering
-  mc.width  = W * DPR; mc.height = H * DPR;
-  mc.style.width  = W + 'px'; mc.style.height = H + 'px';
-  pc.width  = W * DPR; pc.height = H * DPR;
-  pc.style.cssText = `position:absolute;inset:0;width:${W}px;height:${H}px;pointer-events:none;z-index:5`;
-  mCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  pCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
-}
-sizeCanvases();
- 
-/* ─── Map view ──────────────────────────────────── */
-let zoom = 2;
-let cx   = 2.0;    // center of world at zoom 2 (world = 4 tiles wide, center = 2.0)
-let cy   = 1.4;
-const TS = 256;
- 
-/* Clamp so world shows exactly once, no repeating edges */
-function clampView() {
-  const W  = wrap.offsetWidth  || 800;
-  const H  = wrap.offsetHeight || 420;
-  const n  = 1 << zoom;
-  // Horizontal
-  if (n * TS <= W) { cx = n / 2; }
-  else { cx = Math.max(W / 2 / TS, Math.min(n - W / 2 / TS, cx)); }
-  // Vertical
-  if (n * TS <= H) { cy = n / 2; }
-  else { cy = Math.max(H / 2 / TS, Math.min(n - H / 2 / TS, cy)); }
+// Guard: if THREE failed to load from CDN, page still works (no globe, but list/search OK)
+if (typeof THREE === 'undefined') {
+  console.error('Three.js failed to load – globe disabled, app continues');
 }
  
-/* ─── Tile cache ────────────────────────────────── */
-const CACHE = {};
-const TILE_PROVIDERS = [
-  (z,x,y) => `https://${'abcd'[Math.abs(x+y)%4]}.basemaps.cartocdn.com/dark_matter/${z}/${x}/${y}@2x.png`,
-  (z,x,y) => `https://${'abc'[Math.abs(x+y)%3]}.tile.openstreetmap.org/${z}/${x}/${y}.png`,
-];
+// Scene (must be first)
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x070c15);
  
-function getTile(z, tx, ty) {
-  const n = 1 << z;
-  // No wrapping – tiles outside world bounds return null (shown as dark background)
-  if (tx < 0 || tx >= n || ty < 0 || ty >= n) return null;
+// Camera: FOV 36°, z = 3.4 → globe fills ~55% of viewport
+const camera = new THREE.PerspectiveCamera(36, 1, 0.001, 1000);
+camera.position.z = 3.4;
  
-  const key = `${z}/${tx}/${ty}`;
-  if (CACHE[key] instanceof HTMLImageElement) return CACHE[key];
-  if (CACHE[key]) return null;   // loading or failed
+// Renderer
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  antialias: true,
+  powerPreference: "high-performance",
+  failIfMajorPerformanceCaveat: false,
+});
+canvas.addEventListener("webglcontextlost", e => e.preventDefault(), false);
+canvas.addEventListener("webglcontextrestored", () => resizeGlobe(), false);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.sortObjects = true;
  
-  CACHE[key] = 'loading';
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
  
-  function tryProvider(idx) {
-    if (idx >= TILE_PROVIDERS.length) { CACHE[key] = 'failed'; return; }
+/* ══════════════════════════════════════════════════
+   3. SCENE ELEMENTS: LIGHTS, STARS, ATMOSPHERE
+   ══════════════════════════════════════════════════ */
+ 
+// Lights – balanced: night side dark but visible, day side clear
+scene.add(new THREE.AmbientLight(0x334466, 0.45));
+const sun = new THREE.DirectionalLight(0xfff5e0, 1.1);
+sun.position.set(5, 3, 5);
+scene.add(sun);
+const rim = new THREE.DirectionalLight(0x112244, 0.06);
+rim.position.set(-5, -2, -3);
+scene.add(rim);
+ 
+// Stars
+(function buildStars() {
+  const g = new THREE.BufferGeometry();
+  const p = new Float32Array(7000 * 3);
+  for (let i = 0; i < p.length; i++) p[i] = (Math.random() - 0.5) * 600;
+  g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: 0.28 })));
+})();
+ 
+// Atmosphere
+scene.add(new THREE.Mesh(
+  new THREE.SphereGeometry(1.026, 64, 64),
+  new THREE.MeshPhongMaterial({ color: 0x0055cc, transparent: true, opacity: 0.09, side: THREE.FrontSide })
+));
+scene.add(new THREE.Mesh(
+  new THREE.SphereGeometry(1.075, 32, 32),
+  new THREE.MeshPhongMaterial({ color: 0x001133, transparent: true, opacity: 0.05, side: THREE.BackSide })
+));
+ 
+/* ══════════════════════════════════════════════════
+   4. GLOBE BASE – NASA satellite texture
+   Always visible, gives Google-Earth satellite look.
+   ══════════════════════════════════════════════════ */
+const baseMat = new THREE.MeshPhongMaterial({
+  specular:          new THREE.Color(0x04080c),
+  shininess:         5,
+  emissive:          new THREE.Color(0x020408),
+  emissiveIntensity: 0.4,
+});
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 128, 128), baseMat));
+ 
+// Load NASA texture (proven reliable from any origin)
+(function loadNASA() {
+  const urls = [
+    'https://raw.githubusercontent.com/turban/webgl-earth/master/images/2_no_clouds_4k.jpg',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
+  ];
+  let i = 0;
+  function tryNext() {
+    if (i >= urls.length) return;
     const img = new Image();
-    // @2x CARTO tiles are 512px but represent 256px of map → drawn at TS × TS = correct
     img.crossOrigin = 'anonymous';
-    img.onload  = () => { CACHE[key] = img; render(); };
-    img.onerror = () => tryProvider(idx + 1);
-    img.src = TILE_PROVIDERS[idx](z, tx, ty);
+    img.onload = () => {
+      const tex = new THREE.Texture(img);
+      tex.anisotropy      = maxAniso;
+      tex.minFilter       = THREE.LinearFilter;
+      tex.generateMipmaps = false;
+      tex.needsUpdate     = true;
+      baseMat.map         = tex;
+      baseMat.needsUpdate = true;
+    };
+    img.onerror = () => { i++; tryNext(); };
+    img.src = urls[i++];
   }
-  tryProvider(0);
-  return null;
+  tryNext();
+})();
+ 
+/* ══════════════════════════════════════════════════
+   5. TILE SYSTEM
+   Per-tile sphere-patch meshes at radius 1.005.
+   Tiles loaded via crossOrigin + Canvas2D → CanvasTexture.
+   Works on Vercel (https://). NASA shows as fallback.
+   ══════════════════════════════════════════════════ */
+// Radius per zoom level: each level sits above the previous → no z-fighting, clean crossfade
+// Tile radius: tiny per-level offset for z-ordering, camera always outside
+// z=2: 1.0007  z=8: 1.0013  z=16: 1.0021  → camera minDist=1.003 is always outside
+function tileRadius(z) { return 1.0005 + z * 0.0001; }
+const MAX_CACHE  = 2500; // max tiles in GPU memory
+const tileGroup  = new THREE.Group();
+scene.add(tileGroup);
+const tileMeshes  = {}; // key → 'loading'|'error'|THREE.Mesh
+const tileUsed      = {}; // key → timestamp (LRU)
+const tileErrorTime = {}; // key → last error time (for retry)
+const geoCache    = {}; // key → BufferGeometry
+ 
+let mapStyle = localStorage.getItem('rt-mapstyle') || 'map';
+ 
+function tileUrl(z, x, y) {
+  if (mapStyle === 'satellite') {
+    // Esri World Imagery – only server.arcgisonline.com is valid (no real CDN subdomains)
+    return `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
+  }
+  const s = 'abcd'[Math.abs(x + y) % 4];
+  return `https://${s}.basemaps.cartocdn.com/rastertiles/voyager/${z}/${x}/${y}@2x.png`;
 }
  
-/* ─── Main render ───────────────────────────────── */
-function render() {
-  const W = wrap.offsetWidth  || 800;
-  const H = wrap.offsetHeight || 420;
+function switchMapStyle(style) {
+  if (mapStyle === style) return;
+  mapStyle = style;
+  localStorage.setItem('rt-mapstyle', style);
+  for (const key of Object.keys(tileMeshes)) evictTile(key);
+  tileQueue.length = 0;
+  lodLat = 999; lodLon = 999; _loopZ = -1;
+  runLOD();
+  document.getElementById('mapBtn').dataset.style = style;
+}
  
-  mCtx.fillStyle = '#0a0e1a';
-  mCtx.fillRect(0, 0, W, H);
+// Build sphere-patch geometry for one tile.
+// UV: u=0 at lonMin, u=1 at lonMax
+//     v=1-i/segs so that with Three.js flipY=true:
+//       v=1 at latMax (north), v=0 at latMin (south) → correct orientation
+function buildGeo(z, tx, ty) {
+  const key = `g:${z}/${tx}/${ty}`;
+  if (geoCache[key]) return geoCache[key];
  
-  const n = 1 << zoom;
-  const originX = W / 2 - cx * TS;
-  const originY = H / 2 - cy * TS;
+  const n      = 1 << z;
+  const r      = tileRadius(z);  // unique radius per zoom level
+  const toLat  = ry => Math.atan(Math.sinh(Math.PI * (1 - 2 * ry / n))) * 180 / Math.PI;
+  const lon0   = tx / n * 360 - 180;
+  const lon1   = (tx + 1) / n * 360 - 180;
+  const latMax = toLat(ty);
+  const latMin = toLat(ty + 1);
+  const segs   = z <= 2 ? 32 : z <= 4 ? 20 : 14;
  
-  // Dark fill for areas outside the world (before drawing tiles)
-  mCtx.fillStyle = '#050810';
-  // Left of world
-  if (originX > 0) mCtx.fillRect(0, 0, originX, H);
-  // Right of world
-  const worldRight = originX + n * TS;
-  if (worldRight < W) mCtx.fillRect(worldRight, 0, W - worldRight, H);
-  // Top of world
-  if (originY > 0) mCtx.fillRect(0, 0, W, originY);
-  // Bottom of world
-  const worldBottom = originY + n * TS;
-  if (worldBottom < H) mCtx.fillRect(0, worldBottom, W, H - worldBottom);
+  const pos = [], uv = [], norm = [], idx = [];
+  for (let i = 0; i <= segs; i++) {
+    for (let j = 0; j <= segs; j++) {
+      const lat = latMax - (latMax - latMin) * i / segs;
+      const lon = lon0   + (lon1   - lon0)   * j / segs;
+      const phi = (90 - lat) * Math.PI / 180;
+      const tht = (lon + 180) * Math.PI / 180;
+      const x  = -r * Math.sin(phi) * Math.cos(tht);
+      const y  =  r * Math.cos(phi);
+      const z_ =  r * Math.sin(phi) * Math.sin(tht);
+      pos.push(x, y, z_);
+      norm.push(x / r, y / r, z_ / r);
+      uv.push(j / segs, 1 - i / segs); // v=1 at top (latMax/north)
+    }
+  }
+  for (let i = 0; i < segs; i++) {
+    for (let j = 0; j < segs; j++) {
+      const a = i * (segs + 1) + j, b = a + segs + 1;
+      idx.push(a, b, a + 1,  b, b + 1, a + 1);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos,  3));
+  geo.setAttribute('normal',   new THREE.Float32BufferAttribute(norm, 3));
+  geo.setAttribute('uv',       new THREE.Float32BufferAttribute(uv,   2));
+  geo.setIndex(idx);
+  geoCache[key] = geo;
+  return geo;
+}
  
-  const x0 = Math.floor(-originX / TS) - 1;
-  const y0 = Math.floor(-originY / TS) - 1;
-  const x1 = Math.ceil((W - originX) / TS) + 1;
-  const y1 = Math.ceil((H - originY) / TS) + 1;
+// Queue of decoded images waiting to be added to scene
+// Processed max 2 per frame in the render loop to avoid jank
+const tileQueue = [];
  
-  for (let tx = x0; tx <= x1; tx++) {
-    for (let ty = y0; ty <= y1; ty++) {
-      // Skip tiles outside world bounds – they're already covered by dark fill
-      if (tx < 0 || tx >= n || ty < 0 || ty >= n) continue;
-      const px = Math.round(originX + tx * TS);
-      const py = Math.round(originY + ty * TS);
-      const img = getTile(zoom, tx, ty);
-      if (img) {
-        mCtx.drawImage(img, px, py, TS, TS);
+function loadTile(z, tx, ty) {
+  const n   = 1 << z;
+  const wtx = ((tx % n) + n) % n;
+  if (ty < 0 || ty >= n) return;
+  const key = `${z}/${wtx}/${ty}`;
+  if (tileMeshes[key] instanceof THREE.Mesh) {
+    tileMeshes[key].visible = true;
+    tileUsed[key] = Date.now(); return;
+  }
+  if (tileMeshes[key] === 'loading') return;
+  if (tileMeshes[key] === 'error') {
+    if (!tileErrorTime[key] || Date.now()-tileErrorTime[key] < 5000) return;
+    delete tileMeshes[key];
+  }
+  tileMeshes[key] = 'loading';
+  tileUsed[key] = Date.now(); // track load start for stuck detection
+ 
+  function fetchImg(attempt) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      if (tileMeshes[key] !== 'loading') return;
+      if (typeof createImageBitmap !== 'undefined') {
+        createImageBitmap(img).then(bitmap => {
+          if (tileMeshes[key] !== 'loading') { bitmap.close(); return; }
+          tileQueue.push({ key, z, tx: wtx, ty, bitmap });
+        }).catch(() => tileQueue.push({ key, z, tx: wtx, ty, img }));
       } else {
-        mCtx.fillStyle = '#0d1525';
-        mCtx.fillRect(px + 1, py + 1, TS - 2, TS - 2);
+        tileQueue.push({ key, z, tx: wtx, ty, img });
+      }
+    };
+    img.onerror = () => {
+      if (tileMeshes[key] !== 'loading') return;
+      if (attempt < 2) {
+        // Retry once after short delay
+        setTimeout(() => fetchImg(attempt + 1), 400);
+      } else {
+        tileMeshes[key] = 'error'; tileErrorTime[key] = Date.now();
+      }
+    };
+    img.src = tileUrl(z, wtx, ty);
+  }
+  fetchImg(0);
+}
+ 
+// Called once per frame from render loop – drains max 2 tiles per frame
+function drainTileQueue() {
+  // Satellite tiles are larger JPEGs – drain more per frame to compensate
+  const base = mapStyle === 'satellite' ? 3 : 2;
+  const MAX_PER_FRAME = tileQueue.length > 20 ? base * 3 : tileQueue.length > 8 ? base * 2 : base;
+  for (let i = 0; i < MAX_PER_FRAME && tileQueue.length > 0; i++) {
+    const item = tileQueue.shift();
+    const { key, z, tx, ty } = item;
+    const src = item.bitmap || item.img;
+    if (tileMeshes[key] !== 'loading') {
+      if (item.bitmap) item.bitmap.close();
+      continue;
+    }
+    const cvs = document.createElement('canvas');
+    cvs.width  = src.width  || 512;
+    cvs.height = src.height || 512;
+    cvs.getContext('2d').drawImage(src, 0, 0);
+    if (item.bitmap) item.bitmap.close();
+    const tex = new THREE.CanvasTexture(cvs);
+    tex.anisotropy      = maxAniso;
+    tex.minFilter       = THREE.LinearFilter;
+    tex.generateMipmaps = false;
+    const mat  = new THREE.MeshBasicMaterial({
+      map: tex,
+      polygonOffset: true,
+      polygonOffsetFactor: -z * 2,
+      polygonOffsetUnits:  -z * 2,
+    });
+    const mesh = new THREE.Mesh(buildGeo(z, tx, ty), mat);
+    mesh.renderOrder = z;
+    tileGroup.add(mesh);
+    tileMeshes[key] = mesh;
+    tileUsed[key] = Date.now();
+  }
+  const cnt = Object.values(tileMeshes).filter(m=>m instanceof THREE.Mesh).length;
+  if (cnt > MAX_CACHE) evictOld();
+}
+ 
+// Hide tile (keep in GPU → instant re-show on revisit)
+function hideTile(key) {
+  if (tileMeshes[key] instanceof THREE.Mesh) tileMeshes[key].visible = false;
+}
+ 
+// Fully remove from GPU (LRU eviction only)
+function evictTile(key) {
+  const m = tileMeshes[key];
+  if (m instanceof THREE.Mesh) {
+    if (m.material.map) m.material.map.dispose();
+    m.material.dispose(); tileGroup.remove(m);
+  }
+  delete tileMeshes[key]; delete tileUsed[key]; delete tileErrorTime[key];
+}
+ 
+function evictOld() {
+  const sorted = Object.entries(tileUsed)
+    .filter(([k]) => tileMeshes[k] instanceof THREE.Mesh)
+    .sort((a,b)=>a[1]-b[1]);
+  sorted.slice(0,150).forEach(([k])=>evictTile(k));
+}
+ 
+function hideAllTiles() {
+  Object.keys(tileMeshes).forEach(hideTile);
+}
+ 
+/* ══════════════════════════════════════════════════
+   6. LOD CONTROLLER
+   - distToZ: maps camera distance → tile zoom level
+   - Only clears tiles on ZOOM LEVEL change (not pan/rotation)
+   - Pan threshold scaled per zoom level
+   ══════════════════════════════════════════════════ */
+// Smooth log mapping: d=7.0→Z2 (world), d=1.003→Z17 (street)
+// Perceptually equal zoom steps at every distance
+const _L0 = Math.log(7.0   - 1.0); // log(6.0)
+const _L1 = Math.log(1.003 - 1.0); // log(0.003)
+const _LR = _L0 - _L1;             // range ~7.6
+ 
+function distToZ(d) {
+  const clamped = Math.max(1.0031, Math.min(6.99, d));
+  const t = (Math.log(clamped - 1.0) - _L1) / _LR; // 0=close, 1=far
+  return Math.max(2, Math.min(17, Math.round(17 - t * 15)));
+}
+ 
+function getCamCenter() {
+  const dir  = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+  const oc   = camera.position.clone();
+  const b    = 2 * oc.dot(dir);
+  const c    = oc.dot(oc) - 1;
+  const disc = b * b - 4 * c;
+  if (disc < 0) return { lat: 0, lon: 0 };
+  const pt  = oc.clone().addScaledVector(dir, (-b - Math.sqrt(disc)) / 2);
+  const lat = 90 - Math.acos(Math.max(-1, Math.min(1, pt.y))) * 180 / Math.PI;
+  const lon = ((Math.atan2(pt.z, -pt.x) * 180 / Math.PI) - 180 + 540) % 360 - 180;
+  return { lat, lon };
+}
+ 
+function getNeeded(z, lat, lon, overrideR) {
+  const needed = new Set();
+  const n = 1 << z;
+ 
+  // Full globe only Z2-Z3 (16+64=80 tiles, loads fast)
+  // Z4+ loads viewport only – Z4 full globe = 256 tiles, Z5 = 1024, too slow
+  if (z <= 3) {
+    for (let tx = 0; tx < n; tx++)
+      for (let ty = 0; ty < n; ty++)
+        needed.add(`${z}/${tx}/${ty}`);
+    return needed;
+  }
+ 
+  const tcx = Math.floor((lon + 180) / 360 * n);
+  const r0  = Math.max(-Math.PI / 2 + 0.001, Math.min(Math.PI / 2 - 0.001, lat * Math.PI / 180));
+  const tcy = Math.floor((1 - Math.log(Math.tan(r0) + 1 / Math.cos(r0)) / Math.PI) / 2 * n);
+ 
+  // Radius: enough tiles to fill viewport at each zoom level
+  const R = overrideR !== undefined ? overrideR :
+            z <= 6  ? 8 :
+            z <= 8  ? 7 :
+            z <= 10 ? 7 :
+            z <= 13 ? 6 : z <= 15 ? 5 : 4;
+ 
+  for (let dy = -R; dy <= R; dy++) {
+    for (let dx = -R; dx <= R; dx++) {
+      const wtx = ((tcx + dx) % n + n) % n;
+      const wty = tcy + dy;
+      if (wty >= 0 && wty < n) needed.add(`${z}/${wtx}/${wty}`);
+    }
+  }
+  return needed;
+}
+ 
+let lodTs = 0, lodZ = -1, lodLat = 999, lodLon = 999;
+ 
+function runLOD() {
+  const dist = camera.position.length();
+  const z    = distToZ(dist);
+  const { lat, lon } = getCamCenter();
+ 
+  document.getElementById('hudZ').textContent = `· Z${z}`;
+ 
+  const panThresh = 15 / (1 << Math.min(z, 12));
+  const zoomChanged = (z !== lodZ);
+ 
+  if (!zoomChanged && Math.hypot(lat - lodLat, lon - lodLon) < panThresh) return;
+  lodZ = z; lodLat = lat; lodLon = lon;
+ 
+  // ── On zoom change: smart visibility swap handled by loop's swapTileVisibility ──
+  // runLOD only handles loading new tiles and cleanup
+ 
+  // ── Always keep Z2+Z3 overview tiles loaded + Z4 viewport ──────
+  for (let tx = 0; tx < 4; tx++)
+    for (let ty = 0; ty < 4; ty++) loadTile(2, tx, ty);
+  for (let tx = 0; tx < 8; tx++)
+    for (let ty = 0; ty < 8; ty++) loadTile(3, tx, ty);
+  { const n4=16, tcx4=Math.floor((lon+180)/360*n4);
+    const r04=Math.max(-Math.PI/2+.001,Math.min(Math.PI/2-.001,lat*Math.PI/180));
+    const tcy4=Math.floor((1-Math.log(Math.tan(r04)+1/Math.cos(r04))/Math.PI)/2*n4);
+    for(let dy=-4;dy<=4;dy++) for(let dx=-4;dx<=4;dx++)
+      loadTile(4,((tcx4+dx)%n4+n4)%n4,tcy4+dy); }
+ 
+  // ── Load missing tiles for current zoom level ────────────────────
+  const needed = getNeeded(z, lat, lon);
+  const now = Date.now();
+  for (const key of needed) {
+    const m = tileMeshes[key];
+    if (m instanceof THREE.Mesh) {
+      m.visible = true;
+      tileUsed[key] = now;
+    } else if (!m) {
+      // Not loaded yet
+      const [kz, ktx, kty] = key.split('/').map(Number);
+      loadTile(kz, ktx, kty);
+    } else if (m === 'error') {
+      // Retry errored tiles (loadTile handles the 5s gate internally)
+      const [kz, ktx, kty] = key.split('/').map(Number);
+      loadTile(kz, ktx, kty);
+    } else if (m === 'loading' && tileUsed[key] && now - tileUsed[key] > 15000) {
+      // Stuck in loading for >15s – reset and retry
+      delete tileMeshes[key];
+      delete tileUsed[key];
+      const [kz, ktx, kty] = key.split('/').map(Number);
+      loadTile(kz, ktx, kty);
+    }
+  }
+ 
+  // ── Preload prev zoom level too (for zoom-out) ───────────────────
+  if (z > 2) {
+    const prevNeeded = getNeeded(z - 1, lat, lon, 4);
+    for (const key of prevNeeded) {
+      if (!tileMeshes[key] || tileMeshes[key]==='error') {
+        const [kz, ktx, kty] = key.split('/').map(Number);
+        loadTile(kz, ktx, kty);
       }
     }
   }
  
-  // Pins on separate canvas (so they are unaffected by any future styling)
-  renderPins(originX, originY, W, H);
+  // ── Preload next zoom level (for zoom-in) ────────────────────────
+  if (z < 17) {
+    const preR = z <= 8 ? 3 : 4;
+    const preNeeded = getNeeded(z + 1, lat, lon, preR);
+    for (const key of preNeeded) {
+      if (!tileMeshes[key] || tileMeshes[key]==='error') {
+        const [kz, ktx, kty] = key.split('/').map(Number);
+        loadTile(kz, ktx, kty);
+      }
+    }
+  }
  
-  document.getElementById('hudZ').textContent = 'Zoom ' + zoom;
+  // ── Clean up tiles ───────────────────────────────────────────────
+  for (const key of Object.keys(tileMeshes)) {
+    const m = tileMeshes[key];
+    if (!(m instanceof THREE.Mesh)) continue;
+    const kz = parseInt(key);
+    if (kz <= 4) continue; // never evict Z2-Z4 base overview tiles
+    // Evict tiles more than 4 levels above current zoom (zoomed-out-far)
+    if (kz > z + 4) { evictTile(key); continue; }
+    // Evict tiles more than 3 levels below current zoom (zoomed-in-far)
+    if (kz < z - 3 && kz > 4) { evictTile(key); continue; }
+    // Hide same-zoom tiles outside viewport
+    if (kz === z && !needed.has(key)) hideTile(key);
+  }
 }
  
-function renderPins(originX, originY, W, H) {
-  pCtx.clearRect(0, 0, W, H);
+let lodDebounce = 0;
+function updateLOD(now) {
+  const dist = camera.position.length();
+  const z    = distToZ(dist);
+  // When zoom level just changed: react immediately (no debounce)
+  // When panning at same zoom: normal debounce
+  const minWait = z !== lodZ ? 0 : (dist < 1.05 ? 80 : dist < 1.15 ? 130 : 220);
+  if (now - lodDebounce < minWait) return;
+  lodDebounce = now;
+  runLOD();
+}
+ 
+/* ══════════════════════════════════════════════════
+   7. ORBIT CONTROLS
+   ══════════════════════════════════════════════════ */
+const controls = new THREE.OrbitControls(camera, canvas);
+controls.enableDamping   = true;
+controls.dampingFactor   = 0.055;  // higher = smoother deceleration
+controls.minDistance     = 1.003;
+controls.maxDistance     = 7.0;
+controls.enablePan       = false;
+controls.enableZoom      = true;
+controls.zoomSpeed       = 0.5;    // base, overridden dynamically in loop
+controls.autoRotate      = true;
+controls.autoRotateSpeed = 0.25;
+ 
+/* ── Rotation toggle + pause-on-interact + 30s resume ── */
+let rotOn    = true;
+let rotTimer = null;
+ 
+function applyRot() { controls.autoRotate = rotOn; }
+ 
+function pauseRot() {
+  if (!rotOn) return;
+  controls.autoRotate = false;
+  clearTimeout(rotTimer);
+  rotTimer = setTimeout(() => { controls.autoRotate = true; }, 30000);
+}
+ 
+const rotBtn = document.getElementById('rotBtn');
+rotBtn.addEventListener('click', () => {
+  rotOn = !rotOn;
+  clearTimeout(rotTimer);
+  applyRot();
+  rotBtn.classList.toggle('on', rotOn);
+  rotBtn.title = rotOn ? 'Auto-Rotation aus' : 'Auto-Rotation ein';
+});
+ 
+canvas.addEventListener('mousedown',  pauseRot);
+canvas.addEventListener('wheel',      pauseRot, { passive: true });
+canvas.addEventListener('touchstart', pauseRot, { passive: true });
+ 
+/* ══════════════════════════════════════════════════
+   8. PINS
+   ══════════════════════════════════════════════════ */
+const pinGroup = new THREE.Group();
+scene.add(pinGroup);
+ 
+function ll2v(lat, lon, r) {
+  const phi = (90 - lat) * Math.PI / 180;
+  const tht = (lon + 180) * Math.PI / 180;
+  return new THREE.Vector3(
+    -r * Math.sin(phi) * Math.cos(tht),
+     r * Math.cos(phi),
+     r * Math.sin(phi) * Math.sin(tht)
+  );
+}
+ 
+// Shared pin geometries (unit sphere) – scaled via mesh.scale, no new geo per frame
+const _haloGeo = new THREE.SphereGeometry(1, 10, 10);
+const _dotGeo  = new THREE.SphereGeometry(1, 10, 10);
+ 
+let pinDist = -1;
+function syncPins() {
+  const d = camera.position.length();
+  if (Math.abs(d - pinDist) / Math.max(d, 0.1) < 0.008
+      && pinGroup.children.length === locations.length * 2) return;
+  pinDist = d;
+  pinGroup.clear();
+ 
+  const z    = distToZ(d);
+  const pinR = tileRadius(z) + 0.001;
+  const gap   = Math.max(0.0001, d - 1.0);
+  // Linear with distance = constant apparent size on screen
+  // Hard clamp: never bigger than 0.025 (city-scale) or smaller than 0.0004 (still clickable)
+  const haloS = Math.max(0.0004, Math.min(0.025, 0.018 * gap));
+  const dotS  = Math.max(0.0002, Math.min(0.014, 0.010 * gap));
+ 
   locations.forEach(loc => {
-    const p  = ll2t(loc.lat, loc.lon, zoom);
-    const px = originX + p.x * TS;
-    const py = originY + p.y * TS;
-    if (px < -20 || py < -20 || px > W + 20 || py > H + 20) return;
+    const hexCol = loc.pinColor || defColor(loc);
+    const col    = parseInt(hexCol.replace('#',''), 16);
+    const pos    = ll2v(loc.lat, loc.lon, pinR);
  
-    const pinColor  = loc.isCountry ? '#e63946' : '#ffd000';
-    const glowColor = loc.isCountry ? 'rgba(230,57,70,.28)' : 'rgba(255,208,0,.22)';
-    const rimColor  = loc.isCountry ? 'rgba(160,30,40,.9)' : 'rgba(120,75,0,.9)';
+    const halo = new THREE.Mesh(
+      _haloGeo,
+      new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.3 })
+    );
+    halo.position.copy(pos);
+    halo.scale.setScalar(haloS);
+    halo.renderOrder = 98;
  
-    // Outer glow
-    pCtx.beginPath();
-    pCtx.arc(px, py, 10, 0, Math.PI * 2);
-    pCtx.fillStyle = glowColor;
-    pCtx.fill();
+    const pin = new THREE.Mesh(
+      _dotGeo,
+      new THREE.MeshBasicMaterial({ color: col })
+    );
+    pin.position.copy(pos);
+    pin.scale.setScalar(dotS);
+    pin.userData.loc = loc;
+    pin.renderOrder  = 99;
  
-    // Pin dot
-    pCtx.beginPath();
-    pCtx.arc(px, py, 5.5, 0, Math.PI * 2);
-    pCtx.fillStyle   = pinColor;
-    pCtx.strokeStyle = rimColor;
-    pCtx.lineWidth   = 1.5;
-    pCtx.fill();
-    pCtx.stroke();
- 
-    // Label
-    const label = loc.shortName || loc.name.split(',')[0];
-    pCtx.font         = 'bold 12px Karla,sans-serif';
-    pCtx.lineWidth    = 3.5;
-    pCtx.strokeStyle  = 'rgba(0,0,0,.85)';
-    pCtx.fillStyle    = '#fff';
-    pCtx.strokeText(label, px + 9, py + 4);
-    pCtx.fillText   (label, px + 9, py + 4);
+    pinGroup.add(halo);
+    pinGroup.add(pin);
   });
 }
  
-/* ─── Projection helpers ────────────────────────── */
-function ll2t(lat, lon, z) {
-  const n = 1 << z;
-  const x = (lon + 180) / 360 * n;
-  const r = lat * Math.PI / 180;
-  const y = (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * n;
-  return { x, y };
+// Click on pin → open modal
+const raycaster = new THREE.Raycaster();
+const mouse2    = new THREE.Vector2();
+canvas.addEventListener('click', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse2.set(
+    ((e.clientX - r.left) / r.width)  *  2 - 1,
+   -((e.clientY - r.top)  / r.height) *  2 + 1
+  );
+  raycaster.setFromCamera(mouse2, camera);
+  const hit = raycaster.intersectObjects(pinGroup.children).find(h => h.object.userData.loc);
+  if (hit) openModal(hit.object.userData.loc);
+});
+ 
+/* ══════════════════════════════════════════════════
+   9. RESIZE & RENDER LOOP
+   ══════════════════════════════════════════════════ */
+function resizeGlobe() {
+  const rect = wrap.getBoundingClientRect();
+  const w = Math.round(rect.width)  || wrap.clientWidth  || window.innerWidth  || 800;
+  const h = Math.round(rect.height) || wrap.clientHeight || window.innerHeight * 0.62 || 500;
+  if (w < 10 || h < 10) return;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
 }
  
-/* ─── Zoom ──────────────────────────────────────── */
-function setZoom(nz, pivotX, pivotY) {
-  nz = Math.max(1, Math.min(18, nz));
-  if (nz === zoom) return;
-  const W = wrap.offsetWidth || 800;
-  const H = wrap.offsetHeight || 420;
-  const px = pivotX ?? W / 2;
-  const py = pivotY ?? H / 2;
-  const tileMouseX = cx + (px - W / 2) / TS;
-  const tileMouseY = cy + (py - H / 2) / TS;
-  const s = Math.pow(2, nz - zoom);
-  zoom = nz;
-  cx = tileMouseX * s - (px - W / 2) / TS;
-  cy = tileMouseY * s - (py - H / 2) / TS;
-  clampView();
-  render();
-}
+// Cache last control values to avoid reassigning every frame
+let _lastRotSpeed = -1, _lastZoomSpeed = -1;
+let _loopZ = -1; // tracks zoom level change every frame for instant visibility swap
  
-/* ─── Drag / scroll ─────────────────────────────── */
-let drag = null;
-mc.addEventListener('wheel', e => {
-  e.preventDefault();
-  const r = mc.getBoundingClientRect();
-  setZoom(zoom + (e.deltaY < 0 ? 1 : -1),
-    (e.clientX - r.left),
-    (e.clientY - r.top));
-}, { passive: false });
- 
-mc.addEventListener('mousedown', e => {
-  drag = { sx: e.clientX, sy: e.clientY, cx, cy, moved: false };
-  mc.style.cursor = 'grabbing';
-});
-window.addEventListener('mousemove', e => {
-  if (!drag) return;
-  const dx = (e.clientX - drag.sx) / TS;
-  const dy = (e.clientY - drag.sy) / TS;
-  if (Math.hypot(dx, dy) > .004) drag.moved = true;
-  cx = drag.cx - dx; cy = drag.cy - dy;
-  clampView();
-  render();
-});
-window.addEventListener('mouseup', () => { drag = null; mc.style.cursor = 'grab'; });
- 
-mc.addEventListener('click', e => {
-  if (drag?.moved) return;
-  const r  = mc.getBoundingClientRect();
-  const mx = e.clientX - r.left;
-  const my = e.clientY - r.top;
-  const W  = wrap.offsetWidth || 800;
-  const H  = wrap.offsetHeight || 420;
-  const ox = W / 2 - cx * TS;
-  const oy = H / 2 - cy * TS;
-  for (const loc of locations) {
-    const p  = ll2t(loc.lat, loc.lon, zoom);
-    if (Math.hypot(mx - (ox + p.x * TS), my - (oy + p.y * TS)) < 14) { openModal(loc); return; }
+function swapTileVisibility(newZ) {
+  // Show cached tiles at/below new zoom level immediately
+  // Do NOT hide tiles above newZ – they cover the globe while new tiles load
+  // renderOrder = z ensures new higher-detail tiles render on top automatically
+  for (const key of Object.keys(tileMeshes)) {
+    const m = tileMeshes[key];
+    if (!(m instanceof THREE.Mesh)) continue;
+    if (!m.visible) {
+      m.visible = true;
+      tileUsed[key] = Date.now();
+    }
   }
-});
- 
-/* Touch */
-let t0 = null, pinch0 = null;
-mc.addEventListener('touchstart', e => {
-  if (e.touches.length === 1) t0 = { sx: e.touches[0].clientX, sy: e.touches[0].clientY, cx, cy, moved: false };
-  if (e.touches.length === 2) pinch0 = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-}, { passive: true });
-mc.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (e.touches.length === 1 && t0) {
-    const dx = (e.touches[0].clientX - t0.sx) / TS, dy = (e.touches[0].clientY - t0.sy) / TS;
-    if (Math.hypot(dx, dy) > .004) t0.moved = true;
-    cx = t0.cx - dx; cy = t0.cy - dy; clampView(); render();
-  } else if (e.touches.length === 2 && pinch0) {
-    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    if (d / pinch0 > 1.15) { setZoom(zoom + 1); pinch0 = d; }
-    if (d / pinch0 < .87)  { setZoom(zoom - 1); pinch0 = d; }
+  // Only hide tiles that are significantly above current zoom AND not overview tiles
+  // At deep zoom (Z14+) keep old tiles visible to fill gaps while new ones load
+  const hideThresh = newZ > 12 ? newZ + 6 : newZ + 3;
+  for (const key of Object.keys(tileMeshes)) {
+    const m = tileMeshes[key];
+    if (!(m instanceof THREE.Mesh)) continue;
+    const kz = parseInt(key);
+    if (kz <= 4) continue; // always keep overview tiles visible
+    if (kz > hideThresh) m.visible = false;
   }
-}, { passive: false });
-mc.addEventListener('touchend', () => { t0 = null; pinch0 = null; });
- 
-document.getElementById('zIn' ).addEventListener('click', () => setZoom(zoom + 1));
-document.getElementById('zOut').addEventListener('click', () => setZoom(zoom - 1));
- 
-window.addEventListener('resize', () => { sizeCanvases(); render(); });
- 
-function flyTo(lat, lon, z) {
-  const p = ll2t(lat, lon, z);
-  zoom = z; cx = p.x; cy = p.y;
-  clampView();
-  render();
 }
  
-/* ─── Initial render ────────────────────────────── */
-clampView();
-render();
+function loop(ts) {
+  requestAnimationFrame(loop);
  
-/* ─── Nominatim ─────────────────────────────────── */
+  const d   = camera.position.length();
+  const gap = Math.max(0.0001, d - 1.0);
+  const z   = distToZ(d);
+ 
+  // Per-frame zoom level check: swap tile visibility instantly
+  if (z !== _loopZ) {
+    _loopZ = z;
+    swapTileVisibility(z);
+    // Trigger LOD immediately on zoom change (bypass debounce)
+    lodDebounce = 0;
+  }
+ 
+  // Only update controls when values actually change
+  const rs = Math.max(0.004, Math.min(0.62, gap * 0.26));
+  const zs = Math.max(0.03,  Math.min(0.85, gap * 4.0));
+  if (Math.abs(rs - _lastRotSpeed)  > 0.001) { controls.rotateSpeed = rs;  _lastRotSpeed  = rs; }
+  if (Math.abs(zs - _lastZoomSpeed) > 0.001) { controls.zoomSpeed   = zs;  _lastZoomSpeed = zs; }
+ 
+  controls.update();
+  drainTileQueue();
+  renderer.render(scene, camera);
+ 
+  // LOD and pin sync after render
+  updateLOD(ts);
+  syncPins();
+}
+ 
+window.addEventListener('resize', resizeGlobe);
+ 
+/* ══════════════════════════════════════════════════
+   10. FLY TO
+   Smoothly animates camera to face a lat/lon.
+   Disables controls during animation, re-enables after.
+   ══════════════════════════════════════════════════ */
+function flyTo(lat, lon, zoomHint) {
+  const targetDist = zoomHint >= 14 ? 1.002 : zoomHint >= 12 ? 1.005 : zoomHint >= 10 ? 1.015 : zoomHint >= 8 ? 1.04 : zoomHint >= 6 ? 1.15 : zoomHint >= 4 ? 1.7 : 2.8;
+  const endPos     = ll2v(lat, lon, targetDist);
+  const startPos   = camera.position.clone();
+  const t0         = performance.now();
+  const DUR        = 1300;
+ 
+  controls.enabled = false;
+  (function step(t) {
+    let p = Math.min((t - t0) / DUR, 1);
+    p = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p; // ease in-out
+    camera.position.lerpVectors(startPos, endPos, p);
+    camera.lookAt(0, 0, 0);
+    if (p < 1) {
+      requestAnimationFrame(step);
+    } else {
+      controls.enabled = true;
+      lodLat = 999; lodLon = 999;
+      setTimeout(runLOD, 50);
+    }
+  })(t0);
+}
+ 
+/* ══════════════════════════════════════════════════
+   11. i18n
+   ══════════════════════════════════════════════════ */
+const STRINGS = {
+  de: {
+    title:    'Reise Tracker',
+    subtitle: 'Deine bereisten Orte auf einem Blick',
+    searchPh: 'Ort oder Land suchen…',
+    addBtn:   'Ort hinzufügen',
+    myPlaces: 'Meine Orte',
+    empty:    'Noch keine Orte hinzugefügt',
+    note:     'Notiz',
+    notePh:   'Erinnerungen, Tipps, Highlights…',
+    show:     'ANZEIGEN',
+    place:    'Ort', places: 'Orte',
+    noNote:   'Noch keine Notiz vorhanden.',
+    already:  'Bereits in der Liste.',
+    notFound: 'Ort nicht gefunden.',
+    error:    'Geocodierung fehlgeschlagen.',
+    added:    'hinzugefügt',
+    hudTxt:   'Ziehen = Drehen · Scroll = Zoom',
+  },
+  en: {
+    title:    'Travel Tracker',
+    subtitle: 'All your visited places at a glance',
+    searchPh: 'Search for a place or country…',
+    addBtn:   'Add place',
+    myPlaces: 'My Places',
+    empty:    'No places added yet',
+    note:     'Note',
+    notePh:   'Memories, tips, highlights…',
+    show:     'SHOW',
+    place:    'place', places: 'places',
+    noNote:   'No note yet.',
+    already:  'Already in the list.',
+    notFound: 'Place not found.',
+    error:    'Geocoding failed.',
+    added:    'added',
+    hudTxt:   'Drag = Rotate · Scroll = Zoom',
+  },
+};
+let currentLang = localStorage.getItem('rt-lang') || 'de';
+ 
+function applyLang() {
+  const s = STRINGS[currentLang];
+  document.getElementById('langBtn').textContent = currentLang === 'de' ? 'EN' : 'DE';
+  document.getElementById('hudTxt').textContent  = s.hudTxt;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const t = s[el.dataset.i18n]; if (t) el.textContent = t;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const t = s[el.dataset.i18nPh]; if (t) el.placeholder = t;
+  });
+  if (locations.length) renderList();
+}
+ 
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('rt-lang', currentLang);
+  applyLang();
+}
+ 
+/* ══════════════════════════════════════════════════
+   12. PERSISTENCE
+   ══════════════════════════════════════════════════ */
+const STORAGE_KEY    = 'reise-tracker-v1';
+const expandedGroups = new Set();
+ 
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(locations)); } catch(e) {}
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr) || !arr.length) return;
+    arr.forEach(loc => {
+      locations.push(loc);
+      if (loc.country) expandedGroups.add(loc.country);
+    });
+    pinDist = -1;
+    renderList();
+  } catch(e) {}
+}
+ 
+/* ══════════════════════════════════════════════════
+   13. NOMINATIM SEARCH
+   ══════════════════════════════════════════════════ */
 const searchInput = document.getElementById('searchInput');
 const suggDiv     = document.getElementById('suggestions');
 let   searchTimer = null;
+ 
 searchInput.addEventListener('input', () => {
-  clearTimeout(searchTimer); activeSuggest = null;
+  clearTimeout(searchTimer);
+  activeSuggest = null;
   const q = searchInput.value.trim();
   if (q.length < 2) { hideSugg(); return; }
-  searchTimer = setTimeout(() => loadSugg(q), 320);
+  searchTimer = setTimeout(() => fetchSugg(q), 320);
 });
-async function loadSugg(q) {
-  try { renderSugg(await (await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=6&accept-language=de&addressdetails=1`)).json()); }
-  catch(_) { hideSugg(); }
+ 
+async function fetchSugg(q) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}`
+      + `&format=json&limit=6&accept-language=de&addressdetails=1`
+    );
+    renderSugg(await res.json());
+  } catch { hideSugg(); }
 }
-function renderSugg(res) {
-  if (!res.length) { hideSugg(); return; }
-  suggDiv.innerHTML = ''; suggDiv.style.display = 'block';
-  res.forEach(r => {
-    const el = document.createElement('div'); el.className = 'sug-item'; el.textContent = r.display_name;
+ 
+function renderSugg(items) {
+  if (!items.length) { hideSugg(); return; }
+  suggDiv.innerHTML = '';
+  suggDiv.style.display = 'block';
+  items.forEach(r => {
+    const el = document.createElement('div');
+    el.className = 'sug-item';
+    el.textContent = r.display_name;
     el.addEventListener('mousedown', e => {
       e.preventDefault();
       searchInput.value = r.display_name;
-      // Store full raw Nominatim result so handleAdd can use it directly
-      activeSuggest = r;
+      activeSuggest      = r;
       activeSuggest.name = r.display_name;
       hideSugg();
     });
     suggDiv.appendChild(el);
   });
 }
+ 
 function hideSugg() { suggDiv.style.display = 'none'; suggDiv.innerHTML = ''; }
-document.addEventListener('click', e => { if (!e.target.closest('.search-wrapper')) hideSugg(); });
+document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) hideSugg(); });
 searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } });
  
-/* ─── Persistence (localStorage) ───────────────── */
-const STORAGE_KEY = 'reise-tracker-v1';
- 
-// Must be declared before loadLocations uses it
-const expandedGroups = new Set();
- 
-function saveLocations() {
-  try {
-    const data = JSON.stringify(locations);
-    localStorage.setItem(STORAGE_KEY, data);
-    // Verify the save actually worked
-    const check = localStorage.getItem(STORAGE_KEY);
-    if (check !== data) console.warn('localStorage verify failed');
-  } catch(e) { console.warn('localStorage save failed:', e); }
-}
- 
-function loadLocations() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const saved = JSON.parse(raw);
-    if (!Array.isArray(saved) || !saved.length) return;
-    // Clear first to avoid duplicates on double-call
-    locations.length = 0;
-    saved.forEach(loc => {
-      locations.push(loc);
-      if (loc.country) expandedGroups.add(loc.country);
-    });
-    renderList();
-    render();
-  } catch(e) { console.warn('localStorage load failed:', e); }
-}
- 
-/* ─── Add location ─────��────────────────────────── */
+/* ══════════════════════════════════════════════════
+   14. ADD LOCATION
+   ══════════════════════════════════════════════════ */
 document.getElementById('addBtn').addEventListener('click', handleAdd);
  
 async function handleAdd() {
-  const name = searchInput.value.trim(); if (!name) return;
-  const btn = document.getElementById('addBtn'); btn.disabled = true;
+  const name = searchInput.value.trim();
+  if (!name) return;
+  const btn  = document.getElementById('addBtn');
+  btn.disabled = true;
  
   let raw = (activeSuggest?.name === name) ? activeSuggest : null;
- 
   if (!raw) {
     try {
-      // addressdetails=1 gives us country, city, etc.
-      const d = await (await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name)}&format=json&limit=1&accept-language=de&addressdetails=1`
-      )).json();
-      if (!d.length) { showToast('Ort nicht gefunden.'); btn.disabled = false; return; }
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name)}`
+        + `&format=json&limit=1&accept-language=de&addressdetails=1`
+      );
+      const d = await res.json();
+      if (!d.length) { toast(S('notFound')); btn.disabled = false; return; }
       raw = d[0];
-    } catch(_) { showToast('Fehler.'); btn.disabled = false; return; }
+    } catch { toast(S('error')); btn.disabled = false; return; }
   }
-  const addr      = raw.address || {};
-  const country   = addr.country   || '';
-  const shortName = addr.city || addr.town || addr.village || addr.hamlet ||
-                    addr.municipality || addr.county || addr.state ||
-                    raw.display_name.split(',')[0].trim();
-  const isCity    = raw.class === 'place' &&
-                    ['city','town','village','hamlet','municipality'].includes(raw.type);
  
-  // Red pin = only when the entry is a whole country
-  const isCountry = raw.type === 'country' ||
-                    raw.addresstype === 'country' ||
-                    (raw.class === 'boundary' && parseInt(raw.address_rank) <= 4);
+  const addr      = raw.address || {};
+  const country   = addr.country || '';
+  const shortName = addr.city || addr.town || addr.village || addr.hamlet
+                 || addr.municipality || addr.county || addr.state
+                 || raw.display_name.split(',')[0].trim();
+  const isCity    = raw.class === 'place'
+                 && ['city','town','village','hamlet','municipality'].includes(raw.type);
+  const isCountry = raw.type === 'country' || raw.addresstype === 'country'
+                 || (raw.class === 'boundary' && parseInt(raw.address_rank) <= 4);
  
   const loc = {
-    name:      raw.display_name,
-    shortName: shortName,
-    country:   country,
-    lat:       +raw.lat,
-    lon:       +raw.lon,
-    isCity:    isCity,
-    isCountry: isCountry,
-    note:      '',
+    name: raw.display_name, shortName, country,
+    lat: +raw.lat, lon: +raw.lon, isCity, isCountry, note: '',
   };
  
-  if (locations.some(l => l.name === loc.name)) { showToast('Bereits in der Liste.'); btn.disabled = false; return; }
+  if (locations.some(l => l.name === loc.name)) {
+    toast(S('already')); btn.disabled = false; return;
+  }
  
   locations.push(loc);
   if (loc.country) expandedGroups.add(loc.country);
-  saveLocations();  // save AFTER expandedGroups is updated
- 
-  render();
+  pinDist = -1;
+  save();
   renderList();
-  flyTo(loc.lat, loc.lon, isCity ? Math.max(zoom, 7) : Math.max(zoom, 10));
-  searchInput.value = ''; activeSuggest = null; hideSugg(); btn.disabled = false;
-  showToast(`📍 ${shortName} hinzugefügt`);
+  flyTo(loc.lat, loc.lon, isCity ? 7 : 5);
+  searchInput.value = '';
+  activeSuggest     = null;
+  hideSugg();
+  btn.disabled = false;
+  toast(`📍 ${shortName} ${S('added')}`);
 }
  
-/* ─── Grouped list ──────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   PIN COLOR & CATEGORY SYSTEM
+   ══════════════════════════════════════════════════ */
+const PIN_PALETTE = [
+  '#ffd000','#e63946','#4ea8de','#2dc653','#ff8c00',
+  '#c77dff','#00c9b0','#ff6b9d','#ffffff','#a8b2d8',
+];
+function defColor(loc){ return loc.isCountry ? '#e63946' : '#ffd000'; }
+ 
+function renderLegend() {
+  const el = document.getElementById('pinLegend');
+  if (!el) return;
+  const map = new Map();
+  locations.forEach(loc => {
+    const label = (loc.pinCategory||'').trim();
+    if (!label) return;
+    const c = loc.pinColor || defColor(loc);
+    if (!map.has(label)) map.set(label, c);
+  });
+  el.innerHTML = '';
+  map.forEach((color, label) => {
+    const d = document.createElement('div');
+    d.className = 'leg-item';
+    d.innerHTML = `<span class="leg-dot" style="background:${color};box-shadow:0 0 5px ${color}88"></span>${esc(label)}`;
+    el.appendChild(d);
+  });
+}
+ 
+function openColorPicker(loc, swatchEl) {
+  document.querySelectorAll('.cp-popup.open').forEach(p=>p.classList.remove('open'));
+  const wrap = swatchEl.closest('.cp-wrap');
+  let popup = wrap.querySelector('.cp-popup');
+  if (!popup) {
+    const cur = loc.pinColor || defColor(loc);
+    popup = document.createElement('div');
+    popup.className = 'cp-popup';
+    popup.innerHTML =
+      '<div class="cp-colors">' +
+      PIN_PALETTE.map(c=>`<div class="cp-col${c===cur?' sel':''}" style="background:${c}" data-c="${c}"></div>`).join('') +
+      '</div><div class="cp-row">' +
+      `<input class="cp-inp" placeholder="Kategorie…" value="${esc(loc.pinCategory||'')}" maxlength="28">` +
+      '<button class="cp-ok">OK</button></div>';
+    popup.querySelectorAll('.cp-col').forEach(col=>{
+      col.addEventListener('click', ()=>{
+        popup.querySelectorAll('.cp-col').forEach(c=>c.classList.remove('sel'));
+        col.classList.add('sel');
+        loc.pinColor = col.dataset.c;
+        swatchEl.style.background = col.dataset.c;
+        save(); pinDist=-1; syncPins(); renderLegend();
+      });
+    });
+    const inp = popup.querySelector('.cp-inp');
+    const applyFn = () => {
+      loc.pinCategory = inp.value.trim();
+      popup.classList.remove('open');
+      save(); renderList(); renderLegend();
+    };
+    popup.querySelector('.cp-ok').addEventListener('click', applyFn);
+    inp.addEventListener('keydown', e=>{ if(e.key==='Enter') applyFn(); });
+    popup.addEventListener('click', e=>e.stopPropagation());
+    wrap.appendChild(popup);
+  }
+  popup.classList.toggle('open');
+  if (popup.classList.contains('open')) {
+    const r = swatchEl.getBoundingClientRect();
+    const left = Math.max(4, Math.min(window.innerWidth - 215, r.left));
+    const top  = r.top + window.scrollY - 8;
+    popup.style.left = left + 'px';
+    popup.style.top  = top + 'px';
+    popup.style.transform = 'translateY(-100%)';
+  }
+}
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.cp-popup.open').forEach(p=>p.classList.remove('open'));
+});
+ 
+/* ══════════════════════════════════════════════════
+   15. RENDER LIST
+   ══════════════════════════════════════════════════ */
 function renderList() {
   const list = document.getElementById('locationsList');
   document.getElementById('countBadge').textContent = locations.length;
+  const s = STRINGS[currentLang];
  
   if (!locations.length) {
-    list.innerHTML = '<p class="empty-state">Noch keine Orte hinzugefügt</p>';
+    list.innerHTML = `<p class="empty-state">${s.empty}</p>`;
     return;
   }
  
-  // Group by country; ungrouped = no country info
-  const groups  = {};   // countryName → [loc, ...]
-  const ungrouped = []; // locs without country
- 
+  const groups   = {};
+  const ungrouped = [];
   locations.forEach(loc => {
     if (loc.country) {
       (groups[loc.country] = groups[loc.country] || []).push(loc);
@@ -649,134 +1282,167 @@ function renderList() {
  
   list.innerHTML = '';
  
-  // ── Render each country group ──
   Object.entries(groups).forEach(([country, locs]) => {
+    const g  = document.createElement('div');
     const isOpen = expandedGroups.has(country);
-    const group  = document.createElement('div');
-    group.className = 'country-group' + (isOpen ? ' open' : '');
- 
-    const flag = countryFlag(locs[0]);
- 
-    group.innerHTML = `
-      <div class="country-header">
-        <span class="country-flag">${flag}</span>
-        <span class="country-name">${esc(country)}</span>
-        <span class="country-count">${locs.length} ${locs.length === 1 ? 'Ort' : 'Orte'}</span>
-        <span class="country-chevron">▼</span>
+    g.className  = `cg${isOpen ? ' open' : ''}`;
+    g.innerHTML  = `
+      <div class="cg-head">
+        <span class="cg-flag">🌍</span>
+        <span class="cg-name">${esc(country)}</span>
+        <span class="cg-cnt">${locs.length} ${locs.length === 1 ? s.place : s.places}</span>
+        <span class="cg-chev">▼</span>
       </div>
-      <div class="country-places"></div>`;
- 
-    const header = group.querySelector('.country-header');
-    const places = group.querySelector('.country-places');
- 
-    // Render place items inside
-    locs.forEach(loc => {
-      const idx  = locations.indexOf(loc);
-      const item = buildPlaceItem(loc, idx);
-      places.appendChild(item);
+      <div class="cg-body"></div>`;
+    const body = g.querySelector('.cg-body');
+    locs.forEach(loc => body.appendChild(buildItem(loc, locations.indexOf(loc))));
+    g.querySelector('.cg-head').addEventListener('click', () => {
+      const open = g.classList.toggle('open');
+      open ? expandedGroups.add(country) : expandedGroups.delete(country);
     });
- 
-    header.addEventListener('click', () => {
-      const open = group.classList.toggle('open');
-      if (open) expandedGroups.add(country);
-      else       expandedGroups.delete(country);
-    });
- 
-    list.appendChild(group);
+    list.appendChild(g);
   });
  
-  // ── Render ungrouped locations ──
-  if (ungrouped.length) {
-    ungrouped.forEach(loc => {
-      const idx  = locations.indexOf(loc);
-      // Wrap in a single-item group-style card for visual consistency
-      const item = buildPlaceItem(loc, idx);
-      item.style.borderRadius = '14px';
-      item.style.marginBottom = '.65rem';
-      item.style.border       = '1px solid var(--border)';
-      list.appendChild(item);
-    });
-  }
+  ungrouped.forEach(loc => {
+    const item = buildItem(loc, locations.indexOf(loc));
+    item.style.cssText = 'border-radius:13px;margin-bottom:.55rem;border:1px solid var(--border);background:var(--surface)';
+    list.appendChild(item);
+  });
 }
  
-/* Build a single place row with note textarea */
-function buildPlaceItem(loc, idx) {
+function buildItem(loc, idx) {
   const item = document.createElement('div');
-  item.className = 'place-item';
+  item.className = 'pi';
+  const s = STRINGS[currentLang];
+  const col = loc.pinColor || defColor(loc);
   item.innerHTML = `
-    <div class="place-header">
-      <span class="pin-dot ${loc.isCountry ? 'city' : 'place'}"></span>
-      <span class="place-name">${esc(loc.shortName || loc.name.split(',')[0])}</span>
-      <button class="fly-btn" data-i="${idx}">📍</button>
-      <button class="remove-btn" data-i="${idx}">×</button>
+    <div class="pi-head">
+      <span class="cp-wrap"><button class="cp-swatch" style="background:${col}" title="Farbe / Kategorie"></button></span>
+      <span class="pi-name">${esc(loc.shortName || loc.name.split(',')[0])}</span>
+      <button class="fly-btn" data-i="${idx}">📍 ${s.show}</button>
+      <button class="del-btn" data-i="${idx}">×</button>
     </div>
-    <div class="note-label">Notiz</div>
-    <textarea class="note-input" data-i="${idx}" placeholder="Erinnerungen, Tipps, Highlights…">${esc(loc.note)}</textarea>`;
+    <div class="note-lbl">${s.note}</div>
+    <textarea class="note-inp" data-i="${idx}" placeholder="${s.notePh}">${esc(loc.note)}</textarea>`;
  
-  item.querySelector('.note-input').addEventListener('input', e => {
+  item.querySelector('.cp-swatch').addEventListener('click', e => {
+    e.stopPropagation(); openColorPicker(loc, e.currentTarget);
+  });
+  item.querySelector('.note-inp').addEventListener('input', e => {
     locations[+e.target.dataset.i].note = e.target.value;
-    saveLocations();
+    save();
   });
   item.querySelector('.fly-btn').addEventListener('click', e => {
     e.stopPropagation();
     const l = locations[+e.target.dataset.i];
-    flyTo(l.lat, l.lon, 11);
+    flyTo(l.lat, l.lon, 8);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-  item.querySelector('.remove-btn').addEventListener('click', e => {
+  item.querySelector('.del-btn').addEventListener('click', e => {
     e.stopPropagation();
-    const i = +e.target.dataset.i;
-    const country = locations[i].country;
-    if (country && locations.filter(l => l.country === country).length === 1) {
-      expandedGroups.delete(country);
-    }
+    const i  = +e.target.dataset.i;
+    const co = locations[i].country;
+    if (co && locations.filter(l => l.country === co).length === 1) expandedGroups.delete(co);
     locations.splice(i, 1);
-    saveLocations();
-    render();
+    pinDist = -1;
+    save();
     renderList();
   });
   return item;
 }
  
-/* Derive flag emoji from country code */
-function countryFlag(loc) {
-  try {
-    const cc = (loc.name.match(/,\s*([^,]+)$/) || [])[1];
-    // Try to extract country code from display_name last segment
-    // Fallback to globe emoji
-    return '🌍';
-  } catch { return '🌍'; }
-}
- 
-/* ─── Modal ─────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   16. MODAL
+   ══════════════════════════════════════════════════ */
 const modal = document.getElementById('modal');
+ 
 function openModal(loc) {
   document.getElementById('modalTitle').textContent = loc.shortName || loc.name.split(',')[0];
   const n = document.getElementById('modalNote');
-  if (loc.note?.trim()) { n.textContent = loc.note; n.classList.remove('empty'); }
-  else { n.textContent = 'Noch keine Notiz vorhanden.'; n.classList.add('empty'); }
+  if (loc.note?.trim()) {
+    n.textContent = loc.note;
+    n.classList.remove('empty');
+  } else {
+    n.textContent = S('noNote');
+    n.classList.add('empty');
+  }
   modal.classList.add('open');
 }
+ 
 document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
  
-/* ─── Toast ─────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   17. UTILITIES
+   ══════════════════════════════════════════════════ */
 let toastTimer = null;
-function showToast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
  
-/* ─── Boot: load saved data after page fully ready ── */
-// Use window load event so canvas is sized before we render pins
+function S(key) { return (STRINGS[currentLang] || STRINGS.de)[key] || key; }
+ 
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+ 
+/* ══════════════════════════════════════════════════
+   18. BOOT
+   ══════════════════════════════════════════════════ */
 window.addEventListener('load', () => {
-  sizeCanvases();
-  clampView();
-  render();
-  loadLocations();
+  // ALWAYS initialize app content immediately (never skip)
+  load();
+  applyLang();
+  const _mb = document.getElementById('mapBtn');
+  if (_mb) _mb.dataset.style = mapStyle;
+ 
+  // Test WebGL before attempting globe init
+  function testWebGL() {
+    try {
+      const testC = document.createElement('canvas');
+      const ctx = testC.getContext('webgl') || testC.getContext('experimental-webgl');
+      return !!ctx;
+    } catch(e) { return false; }
+  }
+ 
+  if (!testWebGL()) {
+    console.warn('WebGL not available');
+    return;
+  }
+ 
+  // Globe init: wait for layout with retries
+  function tryGlobe(attempt) {
+    const rect = wrap ? wrap.getBoundingClientRect() : {width:0,height:0};
+    const w = rect.width || window.innerWidth;
+    const h = rect.height || window.innerHeight * 0.62;
+    if ((w < 10 || h < 10) && attempt < 15) {
+      setTimeout(() => tryGlobe(attempt + 1), 80);
+      return;
+    }
+    try {
+      resizeGlobe();
+      loop(0);
+    } catch(e) {
+      console.warn('Globe init error:', e);
+      if (attempt < 5) { setTimeout(() => tryGlobe(attempt + 1), 200); return; }
+      return;
+    }
+    // Load base tiles immediately
+    for (let tx=0;tx<4;tx++) for (let ty=0;ty<4;ty++) loadTile(2,tx,ty);
+    for (let tx=0;tx<8;tx++) for (let ty=0;ty<8;ty++) loadTile(3,tx,ty);
+    lodLat = 999; lodLon = 999; runLOD();
+    setTimeout(() => { lodLat = 999; lodLon = 999; runLOD(); }, 600);
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => tryGlobe(0)));
 });
 </script>
 </body>
 </html>
+ 
