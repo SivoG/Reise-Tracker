@@ -644,12 +644,34 @@ function drainTileQueue() {
       tex = new THREE.Texture(src);
       tex.needsUpdate = true;
     } else {
-      const cvs = document.createElement('canvas');
-      cvs.width  = src.width  || 512;
-      cvs.height = src.height || 512;
-      cvs.getContext('2d').drawImage(src, 0, 0);
+      // Reuse a single offscreen canvas instead of creating a new one each tile
+      // iOS Safari limits ~16 simultaneous canvas contexts → black tiles
+      if (!drainTileQueue._cvs) {
+        drainTileQueue._cvs = document.createElement('canvas');
+      }
+      const cvs = drainTileQueue._cvs;
+      const w = src.width  || 512;
+      const h = src.height || 512;
+      // On mobile use half resolution to save memory (256px tiles look fine)
+      const isMobile = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const scale = isMobile ? 0.5 : 1;
+      cvs.width  = Math.round(w * scale);
+      cvs.height = Math.round(h * scale);
+      const ctx = cvs.getContext('2d');
+      if (!ctx) {
+        // Canvas context unavailable – skip this tile, will retry on next runLOD
+        tileMeshes[item.key] = undefined;
+        if (item.bitmap) item.bitmap.close();
+        continue;
+      }
+      ctx.drawImage(src, 0, 0, cvs.width, cvs.height);
       if (item.bitmap) item.bitmap.close();
-      tex = new THREE.CanvasTexture(cvs);
+      // Create ImageData snapshot so canvas can be reused immediately
+      const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+      const snap = document.createElement('canvas');
+      snap.width = cvs.width; snap.height = cvs.height;
+      snap.getContext('2d').putImageData(imgData, 0, 0);
+      tex = new THREE.CanvasTexture(snap);
     }
     tex.anisotropy      = maxAniso;
     tex.minFilter       = THREE.LinearFilter;
