@@ -495,6 +495,18 @@ function buildGeo(z, tx, ty) {
 // Processed max 2 per frame in the render loop to avoid jank
 const tileQueue = [];
  
+// Active fetch count – limit concurrent requests for bandwidth control
+let _activeFetches = 0;
+const MAX_CONCURRENT = /iPhone|iPad|iPod/.test(navigator.userAgent) ? 4 : 8;
+const _fetchQueue   = []; // tiles waiting for a fetch slot
+ 
+function _processFetchQueue() {
+  while (_activeFetches < MAX_CONCURRENT && _fetchQueue.length > 0) {
+    const fn = _fetchQueue.shift();
+    fn();
+  }
+}
+ 
 function loadTile(z, tx, ty) {
   const n   = 1 << z;
   const wtx = ((tx % n) + n) % n;
@@ -510,41 +522,75 @@ function loadTile(z, tx, ty) {
     delete tileMeshes[key];
   }
   tileMeshes[key] = 'loading';
-  tileUsed[key] = Date.now(); // track load start for stuck detection
+  tileUsed[key] = Date.now();
  
-  function fetchImg(attempt) {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      if (tileMeshes[key] !== 'loading') return;
-      if (typeof createImageBitmap !== 'undefined') {
-        createImageBitmap(img).then(bitmap => {
-          if (tileMeshes[key] !== 'loading') { bitmap.close(); return; }
-          tileQueue.push({ key, z, tx: wtx, ty, bitmap });
-        }).catch(() => tileQueue.push({ key, z, tx: wtx, ty, img }));
-      } else {
-        tileQueue.push({ key, z, tx: wtx, ty, img });
-      }
-    };
-    img.onerror = () => {
-      if (tileMeshes[key] !== 'loading') return;
-      if (attempt < 2) {
-        // Retry once after short delay
-        setTimeout(() => fetchImg(attempt + 1), 400);
-      } else {
-        tileMeshes[key] = 'error'; tileErrorTime[key] = Date.now();
-      }
-    };
-    img.src = tileUrl(z, wtx, ty);
+  function doFetch(attempt) {
+    _activeFetches++;
+    fetch(tileUrl(z, wtx, ty))
+      .then(r => {
+        if (!r.ok) throw new Error(r.status);
+        return r.blob();
+      })
+      .then(blob => {
+        _activeFetches--;
+        _processFetchQueue();
+        if (tileMeshes[key] !== 'loading') return;
+        // createImageBitmap: off-thread decode, supported on iOS 15+ / Safari 15+
+        const _noIosBitmap = /iPhone|iPad|iPod/.test(navigator.userAgent);
+        const p = (!_noIosBitmap && typeof createImageBitmap !== 'undefined')
+          ? createImageBitmap(blob) : Promise.resolve(null);
+        p.then(bitmap => {
+          if (tileMeshes[key] !== 'loading') { if(bitmap) bitmap.close(); return; }
+          if (bitmap) {
+            tileQueue.push({ key, z, tx: wtx, ty, bitmap });
+          } else {
+            // Fallback: Image element from blob URL
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => {
+              URL.revokeObjectURL(url);
+              if (tileMeshes[key] !== 'loading') return;
+              tileQueue.push({ key, z, tx: wtx, ty, img });
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); tileMeshes[key]='error'; tileErrorTime[key]=Date.now(); };
+            img.src = url;
+          }
+        }).catch(() => {
+          // createImageBitmap failed, use blob URL
+          const url = URL.createObjectURL(blob);
+          const img = new Image();
+          img.onload = () => { URL.revokeObjectURL(url); if(tileMeshes[key]!=='loading')return; tileQueue.push({key,z,tx:wtx,ty,img}); };
+          img.onerror = () => { URL.revokeObjectURL(url); tileMeshes[key]='error'; tileErrorTime[key]=Date.now(); };
+          img.src = url;
+        });
+      })
+      .catch(err => {
+        _activeFetches--;
+        _processFetchQueue();
+        if (tileMeshes[key] !== 'loading') return;
+        if (attempt < 2) {
+          setTimeout(() => {
+            if (tileMeshes[key] === 'loading') doFetch(attempt + 1);
+          }, 600);
+        } else {
+          tileMeshes[key] = 'error'; tileErrorTime[key] = Date.now();
+        }
+      });
   }
-  fetchImg(0);
+ 
+  // Queue or start fetch immediately
+  if (_activeFetches < MAX_CONCURRENT) {
+    doFetch(0);
+  } else {
+    _fetchQueue.push(() => doFetch(0));
+  }
 }
  
 // Called once per frame from render loop – drains max 2 tiles per frame
 function drainTileQueue() {
-  // Satellite tiles are larger JPEGs – drain more per frame to compensate
-  const base = mapStyle === 'satellite' ? 3 : 2;
-  const MAX_PER_FRAME = tileQueue.length > 20 ? base * 3 : tileQueue.length > 8 ? base * 2 : base;
+  // Drain rate: satellite needs more per frame (larger files, already decoded via fetch)
+  const base = (mapStyle === 'satellite' || /iPhone|iPad|iPod|Android/.test(navigator.userAgent)) ? 4 : 2;
+  const MAX_PER_FRAME = tileQueue.length > 30 ? base * 3 : tileQueue.length > 10 ? base * 2 : base;
   for (let i = 0; i < MAX_PER_FRAME && tileQueue.length > 0; i++) {
     const item = tileQueue.shift();
     const { key, z, tx, ty } = item;
@@ -767,7 +813,8 @@ function updateLOD(now) {
   const z    = distToZ(dist);
   // When zoom level just changed: react immediately (no debounce)
   // When panning at same zoom: normal debounce
-  const minWait = z !== lodZ ? 0 : (dist < 1.05 ? 80 : dist < 1.15 ? 130 : 220);
+  const _mob = /iPhone|iPad|iPod|Android/.test(navigator.userAgent);
+  const minWait = z !== lodZ ? 0 : _mob ? (dist < 1.1 ? 60 : 120) : (dist < 1.05 ? 80 : dist < 1.15 ? 130 : 220);
   if (now - lodDebounce < minWait) return;
   lodDebounce = now;
   runLOD();
@@ -975,17 +1022,20 @@ function flyTo(lat, lon, zoomHint) {
   const t0         = performance.now();
   const DUR        = 1300;
  
-  controls.enabled = false;
+  const wasAutoRotate = controls.autoRotate;
+  controls.autoRotate = false;
+  controls.target.set(0, 0, 0);
   (function step(t) {
     let p = Math.min((t - t0) / DUR, 1);
-    p = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p; // ease in-out
+    p = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
     camera.position.lerpVectors(startPos, endPos, p);
     camera.lookAt(0, 0, 0);
+    controls.target.set(0, 0, 0);
     if (p < 1) {
       requestAnimationFrame(step);
     } else {
-      controls.enabled = true;
-      lodLat = 999; lodLon = 999;
+      controls.autoRotate = wasAutoRotate && rotOn;
+      lodLat = 999; lodLon = 999; _loopZ = -1;
       setTimeout(runLOD, 50);
     }
   })(t0);
