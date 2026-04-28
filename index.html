@@ -15,7 +15,7 @@
   --accent:#e63946;--glow:rgba(230,57,70,.32);--text:#dde3f0;--muted:#5a6e8a;
 }
 body{background:var(--bg);color:var(--text);font-family:'Karla',sans-serif;min-height:100vh;overflow-x:hidden}
- 
+
 /* ── Header ──────────────────────────────────────── */
 header{
   text-align:center;padding:2rem 1rem .6rem;position:relative;z-index:10;
@@ -39,7 +39,7 @@ h1{
   transition:border-color .2s,color .2s;z-index:20;
 }
 #langBtn:hover{border-color:var(--accent);color:var(--text)}
- 
+
 /* ── Search ──────────────────────────────────────── */
 .search-wrap{max-width:620px;margin:1.4rem auto 0;padding:0 1rem;position:relative;z-index:100}
 .search-row{display:flex;gap:.55rem}
@@ -69,7 +69,7 @@ h1{
 }
 .sug-item:last-child{border-bottom:none}
 .sug-item:hover{background:var(--border);color:#fff}
- 
+
 /* ── Globe wrapper ───────────────────────────────── */
 #globeWrap{
   width:100%;height:62vh;max-height:570px;min-height:280px;
@@ -80,7 +80,7 @@ h1{
   cursor:grab;
 }
 #globeCanvas:active{cursor:grabbing}
- 
+
 /* Rotation button */
 #rotBtn{
   position:absolute;top:.65rem;right:.75rem;z-index:20;
@@ -91,7 +91,7 @@ h1{
 }
 #rotBtn:hover{border-color:var(--accent);color:var(--text)}
 #rotBtn.on{border-color:rgba(70,140,230,.65);color:#7ab6ff;background:rgba(70,140,230,.12)}
- 
+
 /* HUD bar */
 #hud{
   position:absolute;bottom:.65rem;left:50%;transform:translateX(-50%);
@@ -103,8 +103,8 @@ h1{
 }
 #hudTxt{color:var(--text)}
 #hudZ{color:var(--muted);font-size:.6rem}
- 
- 
+
+
 /* ── Pin legend strip ──────────────────────────────────────────── */
 #pinLegend{max-width:680px;margin:.6rem auto 0;padding:0 1rem;display:flex;flex-wrap:wrap;gap:.4rem .6rem;min-height:0}
 .leg-item{display:flex;align-items:center;gap:.3rem;background:var(--surface);border:1px solid var(--border);padding:.18rem .5rem .18rem .35rem;border-radius:20px;font-size:.71rem;font-weight:700;color:var(--text);letter-spacing:.04em}
@@ -125,7 +125,7 @@ h1{
 .cp-ok{background:var(--accent);color:#fff;border:none;padding:.26rem .55rem;border-radius:6px;font-family:inherit;font-size:.71rem;font-weight:700;cursor:pointer}
 .cp-ok:hover{filter:brightness(1.15)}
 /* ── Locations list ──────────────────────────────── */
- 
+
 /* ── Map style switch ───────────────────────────────────────────── */
 .map-switch-wrap{max-width:680px;margin:.5rem auto 0;padding:0 1rem}
 #mapBtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:.75rem;font-weight:700;letter-spacing:.05em;padding:.28rem .8rem;border-radius:20px;cursor:pointer;transition:border-color .2s,color .2s;display:inline-flex;gap:.3rem;align-items:center}
@@ -133,7 +133,7 @@ h1{
 #mapBtn[data-style="map"] .msw-sat{opacity:.38}
 #mapBtn[data-style="satellite"] .msw-map{opacity:.38}
 .msw-div{color:var(--border)}
- 
+
 /* ── Color picker: fixed position so it escapes overflow:hidden ─── */
 .cp-popup{position:fixed !important;z-index:600 !important;bottom:auto !important;top:auto !important}
 .list-section{max-width:680px;margin:0 auto;padding:1.4rem 1rem 4rem}
@@ -147,7 +147,7 @@ h1{
   font-size:.7rem;font-weight:700;padding:.12rem .5rem;border-radius:20px;
 }
 .empty-state{color:var(--muted);font-size:.88rem;text-align:center;padding:2.8rem 0}
- 
+
 /* Country groups */
 .cg{
   margin-bottom:.55rem;border-radius:13px;overflow:hidden;
@@ -168,7 +168,7 @@ h1{
 .cg.open .cg-chev{transform:rotate(180deg)}
 .cg-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
 .cg.open .cg-body{max-height:5000px}
- 
+
 /* Place items */
 .pi{border-top:1px solid var(--border);padding:.78rem 1rem .78rem 1.15rem;transition:background .15s}
 .pi:hover{background:rgba(255,255,255,.018)}
@@ -198,7 +198,7 @@ h1{
 }
 .note-inp::placeholder{color:var(--muted)}
 .note-inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--glow)}
- 
+
 /* ── Modal ───────────────────────────────────────── */
 #modal{
   display:none;position:fixed;top:0;right:0;bottom:0;left:0;
@@ -226,7 +226,7 @@ h1{
 .modal-note-lbl{font-size:.68rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem}
 .modal-note{color:var(--text);font-size:.87rem;line-height:1.6;white-space:pre-wrap;min-height:36px}
 .modal-note.empty{color:var(--muted);font-style:italic}
- 
+
 /* ── Toast ───────────────────────────────────────── */
 #toast{
   position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(18px);
@@ -238,13 +238,13 @@ h1{
 </style>
 </head>
 <body>
- 
+
 <header>
   <div id="langBtn" onclick="toggleLang()">EN</div>
   <h1 data-i18n="title">Reise Tracker</h1>
   <p class="subtitle" data-i18n="subtitle">Deine bereisten Orte auf einem Blick</p>
 </header>
- 
+
 <div class="search-wrap">
   <div class="search-row">
     <input id="searchInput" type="text" data-i18n-ph="searchPh"
@@ -253,7 +253,7 @@ h1{
   </div>
   <div id="suggestions"></div>
 </div>
- 
+
 <div id="globeWrap">
   <canvas id="globeCanvas" width="800" height="500"></canvas>
   <button id="rotBtn" class="on" title="Auto-Rotation">⟳</button>
@@ -262,15 +262,15 @@ h1{
     <span id="hudZ"></span>
   </div>
 </div>
- 
+
 <div id="pinLegend"></div>
- 
+
 <div class="map-switch-wrap">
   <button id="mapBtn" data-style="map" onclick="switchMapStyle(this.dataset.style==='map'?'satellite':'map')">
     <span class="msw-map">🗺 Karte</span><span class="msw-div"> · </span><span class="msw-sat">🛰 Satellit</span>
   </button>
 </div>
- 
+
 <div class="list-section">
   <div class="list-header">
     <h2 data-i18n="myPlaces">Meine Orte</h2>
@@ -278,7 +278,7 @@ h1{
   </div>
   <div id="locationsList"></div>
 </div>
- 
+
 <div id="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div class="modal-hd">
@@ -291,35 +291,35 @@ h1{
   </div>
 </div>
 <div id="toast"></div>
- 
+
 <script>
 'use strict';
- 
+
 /* ══════════════════════════════════════════════════
    1. APP STATE
    ══════════════════════════════════════════════════ */
 const locations    = [];
 let   activeSuggest = null;
- 
+
 /* ══════════════════════════════════════════════════
    2. THREE.JS CORE SETUP
    ══════════════════════════════════════════════════ */
 const wrap   = document.getElementById('globeWrap');
 const canvas = document.getElementById('globeCanvas');
- 
+
 // Guard: if THREE failed to load from CDN, page still works (no globe, but list/search OK)
 if (typeof THREE === 'undefined') {
   console.error('Three.js failed to load – globe disabled, app continues');
 }
- 
+
 // Scene (must be first)
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x070c15);
- 
+
 // Camera: FOV 36°, z = 3.4 → globe fills ~55% of viewport
 const camera = new THREE.PerspectiveCamera(36, 1, 0.001, 1000);
 camera.position.z = 3.4;
- 
+
 // Renderer
 const renderer = new THREE.WebGLRenderer({
   canvas,
@@ -331,13 +331,13 @@ canvas.addEventListener("webglcontextlost", e => e.preventDefault(), false);
 canvas.addEventListener("webglcontextrestored", () => resizeGlobe(), false);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.sortObjects = true;
- 
+
 const maxAniso = renderer.capabilities.getMaxAnisotropy();
- 
+
 /* ══════════════════════════════════════════════════
    3. SCENE ELEMENTS: LIGHTS, STARS, ATMOSPHERE
    ══════════════════════════════════════════════════ */
- 
+
 // Lights – balanced: night side dark but visible, day side clear
 scene.add(new THREE.AmbientLight(0x334466, 0.45));
 const sun = new THREE.DirectionalLight(0xfff5e0, 1.1);
@@ -346,7 +346,7 @@ scene.add(sun);
 const rim = new THREE.DirectionalLight(0x112244, 0.06);
 rim.position.set(-5, -2, -3);
 scene.add(rim);
- 
+
 // Stars
 (function buildStars() {
   const g = new THREE.BufferGeometry();
@@ -355,7 +355,7 @@ scene.add(rim);
   g.setAttribute('position', new THREE.BufferAttribute(p, 3));
   scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: 0.28 })));
 })();
- 
+
 // Atmosphere
 scene.add(new THREE.Mesh(
   new THREE.SphereGeometry(1.026, 64, 64),
@@ -365,7 +365,7 @@ scene.add(new THREE.Mesh(
   new THREE.SphereGeometry(1.075, 32, 32),
   new THREE.MeshPhongMaterial({ color: 0x001133, transparent: true, opacity: 0.05, side: THREE.BackSide })
 ));
- 
+
 /* ══════════════════════════════════════════════════
    4. GLOBE BASE – NASA satellite texture
    Always visible, gives Google-Earth satellite look.
@@ -377,7 +377,7 @@ const baseMat = new THREE.MeshPhongMaterial({
   emissiveIntensity: 0.4,
 });
 scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 128, 128), baseMat));
- 
+
 // Load NASA texture (proven reliable from any origin)
 (function loadNASA() {
   const urls = [
@@ -403,7 +403,7 @@ scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 128, 128), baseMat));
   }
   tryNext();
 })();
- 
+
 /* ══════════════════════════════════════════════════
    5. TILE SYSTEM
    Per-tile sphere-patch meshes at radius 1.005.
@@ -421,9 +421,9 @@ const tileMeshes  = {}; // key → 'loading'|'error'|THREE.Mesh
 const tileUsed      = {}; // key → timestamp (LRU)
 const tileErrorTime = {}; // key → last error time (for retry)
 const geoCache    = {}; // key → BufferGeometry
- 
+
 let mapStyle = localStorage.getItem('rt-mapstyle') || 'map';
- 
+
 function tileUrl(z, x, y) {
   if (mapStyle === 'satellite') {
     // Esri World Imagery – only server.arcgisonline.com is valid (no real CDN subdomains)
@@ -432,18 +432,21 @@ function tileUrl(z, x, y) {
   const s = 'abcd'[Math.abs(x + y) % 4];
   return `https://${s}.basemaps.cartocdn.com/rastertiles/voyager/${z}/${x}/${y}@2x.png`;
 }
- 
+
 function switchMapStyle(style) {
   if (mapStyle === style) return;
   mapStyle = style;
   localStorage.setItem('rt-mapstyle', style);
   for (const key of Object.keys(tileMeshes)) evictTile(key);
+  // Flush all pending queues – old zoom level tiles are irrelevant
   tileQueue.length = 0;
+  _imgQueue.length   = 0;
+  _fetchQueue.length = 0;
   lodLat = 999; lodLon = 999; _loopZ = -1;
   runLOD();
   document.getElementById('mapBtn').dataset.style = style;
 }
- 
+
 // Build sphere-patch geometry for one tile.
 // UV: u=0 at lonMin, u=1 at lonMax
 //     v=1-i/segs so that with Three.js flipY=true:
@@ -451,7 +454,7 @@ function switchMapStyle(style) {
 function buildGeo(z, tx, ty) {
   const key = `g:${z}/${tx}/${ty}`;
   if (geoCache[key]) return geoCache[key];
- 
+
   const n      = 1 << z;
   const r      = tileRadius(z);  // unique radius per zoom level
   const toLat  = ry => Math.atan(Math.sinh(Math.PI * (1 - 2 * ry / n))) * 180 / Math.PI;
@@ -460,7 +463,7 @@ function buildGeo(z, tx, ty) {
   const latMax = toLat(ty);
   const latMin = toLat(ty + 1);
   const segs   = z <= 2 ? 32 : z <= 4 ? 20 : 14;
- 
+
   const pos = [], uv = [], norm = [], idx = [];
   for (let i = 0; i <= segs; i++) {
     for (let j = 0; j <= segs; j++) {
@@ -490,23 +493,36 @@ function buildGeo(z, tx, ty) {
   geoCache[key] = geo;
   return geo;
 }
- 
+
 // Queue of decoded images waiting to be added to scene
 // Processed max 2 per frame in the render loop to avoid jank
 const tileQueue = [];
- 
+
 // Active fetch count – limit concurrent requests for bandwidth control
+// Satellite img queue – separate from fetch queue
+// Limits concurrent img.src loads to prevent browser connection overload
+const MAX_IMG = /iPhone|iPad|iPod/.test(navigator.userAgent) ? 5 : 16;
+let _activeImgs = 0;
+const _imgQueue  = [];
+
+function _processImgQueue() {
+  while (_activeImgs < MAX_IMG && _imgQueue.length > 0) {
+    _imgQueue.shift()();
+  }
+}
+
+const _fetchQueue   = []; // tiles waiting for a fetch slot
+
 let _activeFetches = 0;
 const MAX_CONCURRENT = /iPhone|iPad|iPod/.test(navigator.userAgent) ? 4 : 8;
-const _fetchQueue   = []; // tiles waiting for a fetch slot
- 
+
 function _processFetchQueue() {
   while (_activeFetches < MAX_CONCURRENT && _fetchQueue.length > 0) {
     const fn = _fetchQueue.shift();
     fn();
   }
 }
- 
+
 function loadTile(z, tx, ty) {
   const n   = 1 << z;
   const wtx = ((tx % n) + n) % n;
@@ -523,7 +539,38 @@ function loadTile(z, tx, ty) {
   }
   tileMeshes[key] = 'loading';
   tileUsed[key] = Date.now();
- 
+
+  if (mapStyle === 'satellite') {
+    function doImgLoad(attempt) {
+      _activeImgs++;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        _activeImgs--;
+        _processImgQueue();
+        if (tileMeshes[key] !== 'loading') return;
+        // Route through drainTileQueue so mesh creation is spread across frames
+        tileQueue.push({ key, z, tx: wtx, ty, img, isSatellite: true });
+      };
+      img.onerror = () => {
+        _activeImgs--;
+        _processImgQueue();
+        if (tileMeshes[key] !== 'loading') return;
+        if (attempt < 2) {
+          setTimeout(() => { if (tileMeshes[key]==='loading') _imgQueue.push(()=>doImgLoad(attempt+1)); _processImgQueue(); }, 600);
+        } else {
+          tileMeshes[key] = 'error'; tileErrorTime[key] = Date.now();
+        }
+      };
+      img.src = tileUrl(z, wtx, ty);
+    }
+    if (_activeImgs < MAX_IMG) doImgLoad(0);
+    else _imgQueue.unshift(() => doImgLoad(0)); // newest = highest priority = front
+    return;
+  }
+
+  // Map tiles (CARTO): fetch() + blob → canvas → CanvasTexture
+  // CARTO sends Access-Control-Allow-Origin: * → fetch() works fine
   function doFetch(attempt) {
     _activeFetches++;
     fetch(tileUrl(z, wtx, ty))
@@ -535,7 +582,6 @@ function loadTile(z, tx, ty) {
         _activeFetches--;
         _processFetchQueue();
         if (tileMeshes[key] !== 'loading') return;
-        // createImageBitmap: off-thread decode, supported on iOS 15+ / Safari 15+
         const _noIosBitmap = /iPhone|iPad|iPod/.test(navigator.userAgent);
         const p = (!_noIosBitmap && typeof createImageBitmap !== 'undefined')
           ? createImageBitmap(blob) : Promise.resolve(null);
@@ -544,7 +590,6 @@ function loadTile(z, tx, ty) {
           if (bitmap) {
             tileQueue.push({ key, z, tx: wtx, ty, bitmap });
           } else {
-            // Fallback: Image element from blob URL
             const url = URL.createObjectURL(blob);
             const img = new Image();
             img.onload = () => {
@@ -556,7 +601,6 @@ function loadTile(z, tx, ty) {
             img.src = url;
           }
         }).catch(() => {
-          // createImageBitmap failed, use blob URL
           const url = URL.createObjectURL(blob);
           const img = new Image();
           img.onload = () => { URL.revokeObjectURL(url); if(tileMeshes[key]!=='loading')return; tileQueue.push({key,z,tx:wtx,ty,img}); };
@@ -564,28 +608,22 @@ function loadTile(z, tx, ty) {
           img.src = url;
         });
       })
-      .catch(err => {
+      .catch(() => {
         _activeFetches--;
         _processFetchQueue();
         if (tileMeshes[key] !== 'loading') return;
         if (attempt < 2) {
-          setTimeout(() => {
-            if (tileMeshes[key] === 'loading') doFetch(attempt + 1);
-          }, 600);
+          setTimeout(() => { if (tileMeshes[key]==='loading') doFetch(attempt+1); }, 600);
         } else {
           tileMeshes[key] = 'error'; tileErrorTime[key] = Date.now();
         }
       });
   }
- 
-  // Queue or start fetch immediately
-  if (_activeFetches < MAX_CONCURRENT) {
-    doFetch(0);
-  } else {
-    _fetchQueue.push(() => doFetch(0));
-  }
+  if (_activeFetches < MAX_CONCURRENT) doFetch(0);
+  else _fetchQueue.unshift(() => doFetch(0)); // newest = highest priority = front
 }
- 
+
+
 // Called once per frame from render loop – drains max 2 tiles per frame
 function drainTileQueue() {
   // Drain rate: satellite needs more per frame (larger files, already decoded via fetch)
@@ -599,12 +637,19 @@ function drainTileQueue() {
       if (item.bitmap) item.bitmap.close();
       continue;
     }
-    const cvs = document.createElement('canvas');
-    cvs.width  = src.width  || 512;
-    cvs.height = src.height || 512;
-    cvs.getContext('2d').drawImage(src, 0, 0);
-    if (item.bitmap) item.bitmap.close();
-    const tex = new THREE.CanvasTexture(cvs);
+    let tex;
+    if (item.isSatellite) {
+      // Satellite: direct THREE.Texture (no canvas needed)
+      tex = new THREE.Texture(src);
+      tex.needsUpdate = true;
+    } else {
+      const cvs = document.createElement('canvas');
+      cvs.width  = src.width  || 512;
+      cvs.height = src.height || 512;
+      cvs.getContext('2d').drawImage(src, 0, 0);
+      if (item.bitmap) item.bitmap.close();
+      tex = new THREE.CanvasTexture(cvs);
+    }
     tex.anisotropy      = maxAniso;
     tex.minFilter       = THREE.LinearFilter;
     tex.generateMipmaps = false;
@@ -623,12 +668,12 @@ function drainTileQueue() {
   const cnt = Object.values(tileMeshes).filter(m=>m instanceof THREE.Mesh).length;
   if (cnt > MAX_CACHE) evictOld();
 }
- 
+
 // Hide tile (keep in GPU → instant re-show on revisit)
 function hideTile(key) {
   if (tileMeshes[key] instanceof THREE.Mesh) tileMeshes[key].visible = false;
 }
- 
+
 // Fully remove from GPU (LRU eviction only)
 function evictTile(key) {
   const m = tileMeshes[key];
@@ -638,18 +683,18 @@ function evictTile(key) {
   }
   delete tileMeshes[key]; delete tileUsed[key]; delete tileErrorTime[key];
 }
- 
+
 function evictOld() {
   const sorted = Object.entries(tileUsed)
     .filter(([k]) => tileMeshes[k] instanceof THREE.Mesh)
     .sort((a,b)=>a[1]-b[1]);
   sorted.slice(0,150).forEach(([k])=>evictTile(k));
 }
- 
+
 function hideAllTiles() {
   Object.keys(tileMeshes).forEach(hideTile);
 }
- 
+
 /* ══════════════════════════════════════════════════
    6. LOD CONTROLLER
    - distToZ: maps camera distance → tile zoom level
@@ -661,13 +706,13 @@ function hideAllTiles() {
 const _L0 = Math.log(7.0   - 1.0); // log(6.0)
 const _L1 = Math.log(1.003 - 1.0); // log(0.003)
 const _LR = _L0 - _L1;             // range ~7.6
- 
+
 function distToZ(d) {
   const clamped = Math.max(1.0031, Math.min(6.99, d));
   const t = (Math.log(clamped - 1.0) - _L1) / _LR; // 0=close, 1=far
   return Math.max(2, Math.min(17, Math.round(17 - t * 15)));
 }
- 
+
 function getCamCenter() {
   const dir  = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
   const oc   = camera.position.clone();
@@ -680,11 +725,11 @@ function getCamCenter() {
   const lon = ((Math.atan2(pt.z, -pt.x) * 180 / Math.PI) - 180 + 540) % 360 - 180;
   return { lat, lon };
 }
- 
+
 function getNeeded(z, lat, lon, overrideR) {
   const needed = new Set();
   const n = 1 << z;
- 
+
   // Full globe only Z2-Z3 (16+64=80 tiles, loads fast)
   // Z4+ loads viewport only – Z4 full globe = 256 tiles, Z5 = 1024, too slow
   if (z <= 3) {
@@ -693,18 +738,18 @@ function getNeeded(z, lat, lon, overrideR) {
         needed.add(`${z}/${tx}/${ty}`);
     return needed;
   }
- 
+
   const tcx = Math.floor((lon + 180) / 360 * n);
   const r0  = Math.max(-Math.PI / 2 + 0.001, Math.min(Math.PI / 2 - 0.001, lat * Math.PI / 180));
   const tcy = Math.floor((1 - Math.log(Math.tan(r0) + 1 / Math.cos(r0)) / Math.PI) / 2 * n);
- 
-  // Radius: enough tiles to fill viewport at each zoom level
+
+  // Satellite needs smaller radius: single Esri server, large JPEG tiles
+  // Map (CARTO): fast CDN + small PNGs → bigger radius OK
+  const isSat = typeof mapStyle !== 'undefined' && mapStyle === 'satellite';
   const R = overrideR !== undefined ? overrideR :
-            z <= 6  ? 8 :
-            z <= 8  ? 7 :
-            z <= 10 ? 7 :
-            z <= 13 ? 6 : z <= 15 ? 5 : 4;
- 
+            isSat ? (z <= 6 ? 5 : z <= 9 ? 4 : z <= 12 ? 3 : 2) :
+            z <= 6 ? 8 : z <= 8 ? 7 : z <= 10 ? 7 : z <= 13 ? 6 : z <= 15 ? 5 : 4;
+
   for (let dy = -R; dy <= R; dy++) {
     for (let dx = -R; dx <= R; dx++) {
       const wtx = ((tcx + dx) % n + n) % n;
@@ -714,25 +759,25 @@ function getNeeded(z, lat, lon, overrideR) {
   }
   return needed;
 }
- 
+
 let lodTs = 0, lodZ = -1, lodLat = 999, lodLon = 999;
- 
+
 function runLOD() {
   const dist = camera.position.length();
   const z    = distToZ(dist);
   const { lat, lon } = getCamCenter();
- 
+
   document.getElementById('hudZ').textContent = `· Z${z}`;
- 
+
   const panThresh = 15 / (1 << Math.min(z, 12));
   const zoomChanged = (z !== lodZ);
- 
+
   if (!zoomChanged && Math.hypot(lat - lodLat, lon - lodLon) < panThresh) return;
   lodZ = z; lodLat = lat; lodLon = lon;
- 
+
   // ── On zoom change: smart visibility swap handled by loop's swapTileVisibility ──
   // runLOD only handles loading new tiles and cleanup
- 
+
   // ── Always keep Z2+Z3 overview tiles loaded + Z4 viewport ──────
   for (let tx = 0; tx < 4; tx++)
     for (let ty = 0; ty < 4; ty++) loadTile(2, tx, ty);
@@ -743,32 +788,42 @@ function runLOD() {
     const tcy4=Math.floor((1-Math.log(Math.tan(r04)+1/Math.cos(r04))/Math.PI)/2*n4);
     for(let dy=-4;dy<=4;dy++) for(let dx=-4;dx<=4;dx++)
       loadTile(4,((tcx4+dx)%n4+n4)%n4,tcy4+dy); }
- 
-  // ── Load missing tiles for current zoom level ────────────────────
+
+  // ── Load tiles sorted by distance to center (center-first = fast visual feedback) ──
   const needed = getNeeded(z, lat, lon);
   const now = Date.now();
-  for (const key of needed) {
+  const n_z = 1 << z;
+  const tcx_c = Math.floor((lon + 180) / 360 * n_z);
+  const r0_c  = Math.max(-Math.PI/2+.001, Math.min(Math.PI/2-.001, lat*Math.PI/180));
+  const tcy_c = Math.floor((1 - Math.log(Math.tan(r0_c)+1/Math.cos(r0_c))/Math.PI)/2*n_z);
+
+  // Sort: tiles closest to camera center first
+  const sortedNeeded = [...needed].sort((a, b) => {
+    const [,ax,ay] = a.split('/').map(Number);
+    const [,bx,by] = b.split('/').map(Number);
+    const da = (ax-tcx_c)**2 + (ay-tcy_c)**2;
+    const db = (bx-tcx_c)**2 + (by-tcy_c)**2;
+    return da - db;
+  });
+
+  for (const key of sortedNeeded) {
     const m = tileMeshes[key];
     if (m instanceof THREE.Mesh) {
       m.visible = true;
       tileUsed[key] = now;
     } else if (!m) {
-      // Not loaded yet
       const [kz, ktx, kty] = key.split('/').map(Number);
       loadTile(kz, ktx, kty);
     } else if (m === 'error') {
-      // Retry errored tiles (loadTile handles the 5s gate internally)
       const [kz, ktx, kty] = key.split('/').map(Number);
       loadTile(kz, ktx, kty);
     } else if (m === 'loading' && tileUsed[key] && now - tileUsed[key] > 15000) {
-      // Stuck in loading for >15s – reset and retry
-      delete tileMeshes[key];
-      delete tileUsed[key];
+      delete tileMeshes[key]; delete tileUsed[key];
       const [kz, ktx, kty] = key.split('/').map(Number);
       loadTile(kz, ktx, kty);
     }
   }
- 
+
   // ── Preload prev zoom level too (for zoom-out) ───────────────────
   if (z > 2) {
     const prevNeeded = getNeeded(z - 1, lat, lon, 4);
@@ -779,7 +834,7 @@ function runLOD() {
       }
     }
   }
- 
+
   // ── Preload next zoom level (for zoom-in) ────────────────────────
   if (z < 17) {
     const preR = z <= 8 ? 3 : 4;
@@ -791,7 +846,7 @@ function runLOD() {
       }
     }
   }
- 
+
   // ── Clean up tiles ───────────────────────────────────────────────
   for (const key of Object.keys(tileMeshes)) {
     const m = tileMeshes[key];
@@ -806,7 +861,7 @@ function runLOD() {
     if (kz === z && !needed.has(key)) hideTile(key);
   }
 }
- 
+
 let lodDebounce = 0;
 function updateLOD(now) {
   const dist = camera.position.length();
@@ -819,7 +874,7 @@ function updateLOD(now) {
   lodDebounce = now;
   runLOD();
 }
- 
+
 /* ══════════════════════════════════════════════════
    7. ORBIT CONTROLS
    ══════════════════════════════════════════════════ */
@@ -833,20 +888,20 @@ controls.enableZoom      = true;
 controls.zoomSpeed       = 0.5;    // base, overridden dynamically in loop
 controls.autoRotate      = true;
 controls.autoRotateSpeed = 0.25;
- 
+
 /* ── Rotation toggle + pause-on-interact + 30s resume ── */
 let rotOn    = true;
 let rotTimer = null;
- 
+
 function applyRot() { controls.autoRotate = rotOn; }
- 
+
 function pauseRot() {
   if (!rotOn) return;
   controls.autoRotate = false;
   clearTimeout(rotTimer);
   rotTimer = setTimeout(() => { controls.autoRotate = true; }, 30000);
 }
- 
+
 const rotBtn = document.getElementById('rotBtn');
 rotBtn.addEventListener('click', () => {
   rotOn = !rotOn;
@@ -855,17 +910,17 @@ rotBtn.addEventListener('click', () => {
   rotBtn.classList.toggle('on', rotOn);
   rotBtn.title = rotOn ? 'Auto-Rotation aus' : 'Auto-Rotation ein';
 });
- 
+
 canvas.addEventListener('mousedown',  pauseRot);
 canvas.addEventListener('wheel',      pauseRot, { passive: true });
 canvas.addEventListener('touchstart', pauseRot, { passive: true });
- 
+
 /* ══════════════════════════════════════════════════
    8. PINS
    ══════════════════════════════════════════════════ */
 const pinGroup = new THREE.Group();
 scene.add(pinGroup);
- 
+
 function ll2v(lat, lon, r) {
   const phi = (90 - lat) * Math.PI / 180;
   const tht = (lon + 180) * Math.PI / 180;
@@ -875,11 +930,11 @@ function ll2v(lat, lon, r) {
      r * Math.sin(phi) * Math.sin(tht)
   );
 }
- 
+
 // Shared pin geometries (unit sphere) – scaled via mesh.scale, no new geo per frame
 const _haloGeo = new THREE.SphereGeometry(1, 10, 10);
 const _dotGeo  = new THREE.SphereGeometry(1, 10, 10);
- 
+
 let pinDist = -1;
 function syncPins() {
   const d = camera.position.length();
@@ -887,7 +942,7 @@ function syncPins() {
       && pinGroup.children.length === locations.length * 2) return;
   pinDist = d;
   pinGroup.clear();
- 
+
   const z    = distToZ(d);
   const pinR = tileRadius(z) + 0.001;
   const gap   = Math.max(0.0001, d - 1.0);
@@ -895,12 +950,12 @@ function syncPins() {
   // Hard clamp: never bigger than 0.025 (city-scale) or smaller than 0.0004 (still clickable)
   const haloS = Math.max(0.0004, Math.min(0.025, 0.018 * gap));
   const dotS  = Math.max(0.0002, Math.min(0.014, 0.010 * gap));
- 
+
   locations.forEach(loc => {
     const hexCol = loc.pinColor || defColor(loc);
     const col    = parseInt(hexCol.replace('#',''), 16);
     const pos    = ll2v(loc.lat, loc.lon, pinR);
- 
+
     const halo = new THREE.Mesh(
       _haloGeo,
       new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.3 })
@@ -908,7 +963,7 @@ function syncPins() {
     halo.position.copy(pos);
     halo.scale.setScalar(haloS);
     halo.renderOrder = 98;
- 
+
     const pin = new THREE.Mesh(
       _dotGeo,
       new THREE.MeshBasicMaterial({ color: col })
@@ -917,12 +972,12 @@ function syncPins() {
     pin.scale.setScalar(dotS);
     pin.userData.loc = loc;
     pin.renderOrder  = 99;
- 
+
     pinGroup.add(halo);
     pinGroup.add(pin);
   });
 }
- 
+
 // Click on pin → open modal
 const raycaster = new THREE.Raycaster();
 const mouse2    = new THREE.Vector2();
@@ -936,7 +991,7 @@ canvas.addEventListener('click', e => {
   const hit = raycaster.intersectObjects(pinGroup.children).find(h => h.object.userData.loc);
   if (hit) openModal(hit.object.userData.loc);
 });
- 
+
 /* ══════════════════════════════════════════════════
    9. RESIZE & RENDER LOOP
    ══════════════════════════════════════════════════ */
@@ -949,42 +1004,44 @@ function resizeGlobe() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }
- 
+
 // Cache last control values to avoid reassigning every frame
 let _lastRotSpeed = -1, _lastZoomSpeed = -1;
 let _loopZ = -1; // tracks zoom level change every frame for instant visibility swap
- 
+
 function swapTileVisibility(newZ) {
   // Show cached tiles at/below new zoom level immediately
   // Do NOT hide tiles above newZ – they cover the globe while new tiles load
   // renderOrder = z ensures new higher-detail tiles render on top automatically
-  for (const key of Object.keys(tileMeshes)) {
-    const m = tileMeshes[key];
-    if (!(m instanceof THREE.Mesh)) continue;
-    if (!m.visible) {
-      m.visible = true;
-      tileUsed[key] = Date.now();
-    }
-  }
-  // Only hide tiles that are significantly above current zoom AND not overview tiles
-  // At deep zoom (Z14+) keep old tiles visible to fill gaps while new ones load
+  const _satMode = typeof mapStyle !== 'undefined' && mapStyle === 'satellite';
+  // For satellite: hide tiles that are too many levels below current zoom
+  // (blurry low-res satellite looks worse than the NASA base texture)
+  // For map: be more generous (CARTO tiles at lower zoom still readable)
+  const showMinZ = _satMode ? Math.max(2, newZ - 2) : 2;
   const hideThresh = newZ > 12 ? newZ + 6 : newZ + 3;
+
   for (const key of Object.keys(tileMeshes)) {
     const m = tileMeshes[key];
     if (!(m instanceof THREE.Mesh)) continue;
     const kz = parseInt(key);
-    if (kz <= 4) continue; // always keep overview tiles visible
-    if (kz > hideThresh) m.visible = false;
+    if (kz >= showMinZ && kz <= hideThresh) {
+      if (!m.visible) { m.visible = true; tileUsed[key] = Date.now(); }
+    } else if (kz > hideThresh) {
+      m.visible = false;
+    } else if (kz < showMinZ && kz > 4) {
+      // Satellite: hide too-blurry lower zoom tiles – NASA base shows instead
+      if (_satMode) m.visible = false;
+    }
   }
 }
- 
+
 function loop(ts) {
   requestAnimationFrame(loop);
- 
+
   const d   = camera.position.length();
   const gap = Math.max(0.0001, d - 1.0);
   const z   = distToZ(d);
- 
+
   // Per-frame zoom level check: swap tile visibility instantly
   if (z !== _loopZ) {
     _loopZ = z;
@@ -992,24 +1049,24 @@ function loop(ts) {
     // Trigger LOD immediately on zoom change (bypass debounce)
     lodDebounce = 0;
   }
- 
+
   // Only update controls when values actually change
   const rs = Math.max(0.004, Math.min(0.62, gap * 0.26));
   const zs = Math.max(0.03,  Math.min(0.85, gap * 4.0));
   if (Math.abs(rs - _lastRotSpeed)  > 0.001) { controls.rotateSpeed = rs;  _lastRotSpeed  = rs; }
   if (Math.abs(zs - _lastZoomSpeed) > 0.001) { controls.zoomSpeed   = zs;  _lastZoomSpeed = zs; }
- 
+
   controls.update();
   drainTileQueue();
   renderer.render(scene, camera);
- 
+
   // LOD and pin sync after render
   updateLOD(ts);
   syncPins();
 }
- 
+
 window.addEventListener('resize', resizeGlobe);
- 
+
 /* ══════════════════════════════════════════════════
    10. FLY TO
    Smoothly animates camera to face a lat/lon.
@@ -1021,7 +1078,7 @@ function flyTo(lat, lon, zoomHint) {
   const startPos   = camera.position.clone();
   const t0         = performance.now();
   const DUR        = 1300;
- 
+
   const wasAutoRotate = controls.autoRotate;
   controls.autoRotate = false;
   controls.target.set(0, 0, 0);
@@ -1040,7 +1097,7 @@ function flyTo(lat, lon, zoomHint) {
     }
   })(t0);
 }
- 
+
 /* ══════════════════════════════════════════════════
    11. i18n
    ══════════════════════════════════════════════════ */
@@ -1083,7 +1140,7 @@ const STRINGS = {
   },
 };
 let currentLang = localStorage.getItem('rt-lang') || 'de';
- 
+
 function applyLang() {
   const s = STRINGS[currentLang];
   document.getElementById('langBtn').textContent = currentLang === 'de' ? 'EN' : 'DE';
@@ -1096,19 +1153,19 @@ function applyLang() {
   });
   if (locations.length) renderList();
 }
- 
+
 function toggleLang() {
   currentLang = currentLang === 'de' ? 'en' : 'de';
   localStorage.setItem('rt-lang', currentLang);
   applyLang();
 }
- 
+
 /* ══════════════════════════════════════════════════
    12. PERSISTENCE
    ══════════════════════════════════════════════════ */
 const STORAGE_KEY    = 'reise-tracker-v1';
 const expandedGroups = new Set();
- 
+
 function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(locations)); } catch(e) {}
 }
@@ -1126,14 +1183,14 @@ function load() {
     renderList();
   } catch(e) {}
 }
- 
+
 /* ══════════════════════════════════════════════════
    13. NOMINATIM SEARCH
    ══════════════════════════════════════════════════ */
 const searchInput = document.getElementById('searchInput');
 const suggDiv     = document.getElementById('suggestions');
 let   searchTimer = null;
- 
+
 searchInput.addEventListener('input', () => {
   clearTimeout(searchTimer);
   activeSuggest = null;
@@ -1141,7 +1198,7 @@ searchInput.addEventListener('input', () => {
   if (q.length < 2) { hideSugg(); return; }
   searchTimer = setTimeout(() => fetchSugg(q), 320);
 });
- 
+
 async function fetchSugg(q) {
   try {
     const res = await fetch(
@@ -1151,7 +1208,7 @@ async function fetchSugg(q) {
     renderSugg(await res.json());
   } catch { hideSugg(); }
 }
- 
+
 function renderSugg(items) {
   if (!items.length) { hideSugg(); return; }
   suggDiv.innerHTML = '';
@@ -1170,22 +1227,22 @@ function renderSugg(items) {
     suggDiv.appendChild(el);
   });
 }
- 
+
 function hideSugg() { suggDiv.style.display = 'none'; suggDiv.innerHTML = ''; }
 document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) hideSugg(); });
 searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } });
- 
+
 /* ══════════════════════════════════════════════════
    14. ADD LOCATION
    ══════════════════════════════════════════════════ */
 document.getElementById('addBtn').addEventListener('click', handleAdd);
- 
+
 async function handleAdd() {
   const name = searchInput.value.trim();
   if (!name) return;
   const btn  = document.getElementById('addBtn');
   btn.disabled = true;
- 
+
   let raw = (activeSuggest?.name === name) ? activeSuggest : null;
   if (!raw) {
     try {
@@ -1198,7 +1255,7 @@ async function handleAdd() {
       raw = d[0];
     } catch { toast(S('error')); btn.disabled = false; return; }
   }
- 
+
   const addr      = raw.address || {};
   const country   = addr.country || '';
   const shortName = addr.city || addr.town || addr.village || addr.hamlet
@@ -1208,16 +1265,16 @@ async function handleAdd() {
                  && ['city','town','village','hamlet','municipality'].includes(raw.type);
   const isCountry = raw.type === 'country' || raw.addresstype === 'country'
                  || (raw.class === 'boundary' && parseInt(raw.address_rank) <= 4);
- 
+
   const loc = {
     name: raw.display_name, shortName, country,
     lat: +raw.lat, lon: +raw.lon, isCity, isCountry, note: '',
   };
- 
+
   if (locations.some(l => l.name === loc.name)) {
     toast(S('already')); btn.disabled = false; return;
   }
- 
+
   locations.push(loc);
   if (loc.country) expandedGroups.add(loc.country);
   pinDist = -1;
@@ -1230,7 +1287,7 @@ async function handleAdd() {
   btn.disabled = false;
   toast(`📍 ${shortName} ${S('added')}`);
 }
- 
+
 /* ══════════════════════════════════════════════════
    PIN COLOR & CATEGORY SYSTEM
    ══════════════════════════════════════════════════ */
@@ -1239,7 +1296,7 @@ const PIN_PALETTE = [
   '#c77dff','#00c9b0','#ff6b9d','#ffffff','#a8b2d8',
 ];
 function defColor(loc){ return loc.isCountry ? '#e63946' : '#ffd000'; }
- 
+
 function renderLegend() {
   const el = document.getElementById('pinLegend');
   if (!el) return;
@@ -1258,7 +1315,7 @@ function renderLegend() {
     el.appendChild(d);
   });
 }
- 
+
 function openColorPicker(loc, swatchEl) {
   document.querySelectorAll('.cp-popup.open').forEach(p=>p.classList.remove('open'));
   const wrap = swatchEl.closest('.cp-wrap');
@@ -1306,7 +1363,7 @@ function openColorPicker(loc, swatchEl) {
 document.addEventListener('click', ()=>{
   document.querySelectorAll('.cp-popup.open').forEach(p=>p.classList.remove('open'));
 });
- 
+
 /* ══════════════════════════════════════════════════
    15. RENDER LIST
    ══════════════════════════════════════════════════ */
@@ -1314,12 +1371,12 @@ function renderList() {
   const list = document.getElementById('locationsList');
   document.getElementById('countBadge').textContent = locations.length;
   const s = STRINGS[currentLang];
- 
+
   if (!locations.length) {
     list.innerHTML = `<p class="empty-state">${s.empty}</p>`;
     return;
   }
- 
+
   const groups   = {};
   const ungrouped = [];
   locations.forEach(loc => {
@@ -1329,9 +1386,9 @@ function renderList() {
       ungrouped.push(loc);
     }
   });
- 
+
   list.innerHTML = '';
- 
+
   Object.entries(groups).forEach(([country, locs]) => {
     const g  = document.createElement('div');
     const isOpen = expandedGroups.has(country);
@@ -1352,14 +1409,14 @@ function renderList() {
     });
     list.appendChild(g);
   });
- 
+
   ungrouped.forEach(loc => {
     const item = buildItem(loc, locations.indexOf(loc));
     item.style.cssText = 'border-radius:13px;margin-bottom:.55rem;border:1px solid var(--border);background:var(--surface)';
     list.appendChild(item);
   });
 }
- 
+
 function buildItem(loc, idx) {
   const item = document.createElement('div');
   item.className = 'pi';
@@ -1374,7 +1431,7 @@ function buildItem(loc, idx) {
     </div>
     <div class="note-lbl">${s.note}</div>
     <textarea class="note-inp" data-i="${idx}" placeholder="${s.notePh}">${esc(loc.note)}</textarea>`;
- 
+
   item.querySelector('.cp-swatch').addEventListener('click', e => {
     e.stopPropagation(); openColorPicker(loc, e.currentTarget);
   });
@@ -1400,12 +1457,12 @@ function buildItem(loc, idx) {
   });
   return item;
 }
- 
+
 /* ══════════════════════════════════════════════════
    16. MODAL
    ══════════════════════════════════════════════════ */
 const modal = document.getElementById('modal');
- 
+
 function openModal(loc) {
   document.getElementById('modalTitle').textContent = loc.shortName || loc.name.split(',')[0];
   const n = document.getElementById('modalNote');
@@ -1418,11 +1475,11 @@ function openModal(loc) {
   }
   modal.classList.add('open');
 }
- 
+
 document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
- 
+
 /* ══════════════════════════════════════════════════
    17. UTILITIES
    ══════════════════════════════════════════════════ */
@@ -1434,15 +1491,15 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
- 
+
 function S(key) { return (STRINGS[currentLang] || STRINGS.de)[key] || key; }
- 
+
 function esc(s) {
   return String(s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
- 
+
 /* ══════════════════════════════════════════════════
    18. BOOT
    ══════════════════════════════════════════════════ */
@@ -1452,7 +1509,7 @@ window.addEventListener('load', () => {
   applyLang();
   const _mb = document.getElementById('mapBtn');
   if (_mb) _mb.dataset.style = mapStyle;
- 
+
   // Test WebGL before attempting globe init
   function testWebGL() {
     try {
@@ -1461,12 +1518,12 @@ window.addEventListener('load', () => {
       return !!ctx;
     } catch(e) { return false; }
   }
- 
+
   if (!testWebGL()) {
     console.warn('WebGL not available');
     return;
   }
- 
+
   // Globe init: wait for layout with retries
   function tryGlobe(attempt) {
     const rect = wrap ? wrap.getBoundingClientRect() : {width:0,height:0};
@@ -1495,4 +1552,3 @@ window.addEventListener('load', () => {
 </script>
 </body>
 </html>
- 
